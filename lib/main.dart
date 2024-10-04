@@ -3,6 +3,7 @@ import 'pages/login_page.dart'; // Controleer of dit pad klopt
 import 'pages/home_page.dart'; // Controleer of dit pad klopt
 import 'pages/profile_page.dart';
 import 'pages/stats_page.dart'; // Controleer of dit pad klopt
+import 'pages/leaderboard_page.dart'; // Voeg de import toe
 
 void main() {
   runApp(MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
         '/statistics': (context) => StatisticsPage(),
+        '/leaderboard': (context) => LeaderboardPage(), // Voeg de route toe
       },
     );
   }
