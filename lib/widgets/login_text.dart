@@ -31,3 +31,37 @@ class LoginTextField extends StatelessWidget {
     );
   }
 }
+
+
+
+// API Service
+// import 'package:flutter/material.dart';
+
+// class LoginTextField extends StatelessWidget {
+//   final String label;
+//   final bool obscureText;
+//   final TextEditingController controller;
+
+//   const LoginTextField({
+//     required this.label,
+//     this.obscureText = false,
+//     required this.controller,
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextField(
+//       controller: controller,
+//       decoration: InputDecoration(
+//         labelText: label,
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         filled: true,
+//         fillColor: Colors.white,
+//       ),
+//       obscureText: obscureText,
+//     );
+//   }
+// }

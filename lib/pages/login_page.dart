@@ -88,3 +88,108 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+
+// API service
+// import 'package:flutter/material.dart';
+// import '../widgets/login_text.dart';
+// import '../api/api_service.dart'; // Import the API service
+
+// class LoginPage extends StatefulWidget {
+//   @override
+//   _LoginPageState createState() => _LoginPageState();
+// }
+
+// class _LoginPageState extends State<LoginPage> {
+//   final ApiService apiService = ApiService();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController passwordController = TextEditingController();
+
+//   void _login() async {
+//     String email = emailController.text;
+//     String password = passwordController.text;
+
+//     bool success = await apiService.loginUser(email, password);
+//     if (success) {
+//       // If login successful, navigate to home page
+//       Navigator.pushReplacementNamed(context, '/home');
+//     } else {
+//       // Show an error message if login fails
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Login failed. Please check your credentials.')),
+//       );
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Login"),
+//         backgroundColor: Colors.transparent,
+//         elevation: 0,
+//       ),
+//       body: Container(
+//         decoration: BoxDecoration(
+//           gradient: LinearGradient(
+//             colors: [
+//               Colors.white,
+//               Colors.green[300]!,
+//             ],
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//           ),
+//         ),
+//         padding: EdgeInsets.all(16.0),
+//         child: Center(
+//           child: SingleChildScrollView(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 SizedBox(height: 40),
+//                 Text(
+//                   "Welkom bij de FloraFocus",
+//                   style: TextStyle(
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.w600,
+//                     color: Colors.black87,
+//                     fontFamily: 'Montserrat',
+//                   ),
+//                 ),
+//                 SizedBox(height: 40),
+//                 LoginTextField(
+//                   label: "Email",
+//                   controller: emailController, // Add controller for email
+//                 ),
+//                 SizedBox(height: 16),
+//                 LoginTextField(
+//                   label: "Wachtwoord",
+//                   obscureText: true,
+//                   controller: passwordController, // Add controller for password
+//                 ),
+//                 SizedBox(height: 20),
+//                 ElevatedButton(
+//                   onPressed: _login, // Call _login function when pressed
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.green[600],
+//                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(10),
+//                     ),
+//                     textStyle: TextStyle(
+//                       fontSize: 18,
+//                       fontWeight: FontWeight.bold,
+//                       fontFamily: 'Roboto',
+//                     ),
+//                   ),
+//                   child: Text("Login"),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+

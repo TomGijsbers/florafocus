@@ -64,6 +64,11 @@
           "seed_name": "Pompoen",
           "fruit_name": "Pompoenpit",
           "sku_code": "PUM789"
+        },
+        {
+          "seed_name": "Komkommer",
+          "fruit_name": "Komkommer",
+          "sku_code": "CUC345"
         }
       ]
     },
