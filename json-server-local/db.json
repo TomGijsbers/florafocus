@@ -1,0 +1,114 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "george.bluth@reqres.in",
+      "first_name": "George",
+      "last_name": "Bluth",
+      "password": "password123",
+      "scanned_seeds": [
+        {
+          "seed_name": "Zonnebloem",
+          "fruit_name": "Zonnepit",
+          "sku_code": "SUN001"
+        },
+        {
+          "seed_name": "Tomaat",
+          "fruit_name": "Tomaat",
+          "sku_code": "TOM123"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "email": "janet.weaver@ping.be",
+      "first_name": "Janet",
+      "last_name": "Weaver",
+      "password": "mypassword456",
+      "scanned_seeds": [
+        {
+          "seed_name": "Wortel",
+          "fruit_name": "Wortel",
+          "sku_code": "CAR567"
+        },
+        {
+          "seed_name": "Paprika",
+          "fruit_name": "Paprika",
+          "sku_code": "PAP567"
+        },
+        {
+          "seed_name": "Komkommer",
+          "fruit_name": "Komkommer",
+          "sku_code": "CUC345"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "email": "eve.holt@request.com",
+      "first_name": "Eve",
+      "last_name": "Holt",
+      "password": "securepass789",
+      "scanned_seeds": [
+        {
+          "seed_name": "Paprika",
+          "fruit_name": "Paprika",
+          "sku_code": "PAP567"
+        },
+        {
+          "seed_name": "Wortel",
+          "fruit_name": "Wortel",
+          "sku_code": "CAR567"
+        },
+        {
+          "seed_name": "Pompoen",
+          "fruit_name": "Pompoenpit",
+          "sku_code": "PUM789"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "email": "charles.morris@idaho.org",
+      "first_name": "Charles",
+      "last_name": "Morris",
+      "password": "charlespass111",
+      "scanned_seeds": [
+        {
+          "seed_name": "Ui",
+          "fruit_name": "Ui",
+          "sku_code": "ONI234"
+        },
+        {
+          "seed_name": "Komkommer",
+          "fruit_name": "Komkommer",
+          "sku_code": "CUC345"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "email": "tracey.ramos@google.com",
+      "first_name": "Tracey",
+      "last_name": "Ramos",
+      "password": "traceypass333",
+      "scanned_seeds": [
+        {
+          "seed_name": "Sla",
+          "fruit_name": "Sla",
+          "sku_code": "LET678"
+        },
+        {
+          "seed_name": "Ui",
+          "fruit_name": "Ui",
+          "sku_code": "ONI234"
+        },
+        {
+          "seed_name": "Aardbei",
+          "fruit_name": "Aardbei",
+          "sku_code": "STR012"
+        }
+      ]
+    }
+  ]
+}
