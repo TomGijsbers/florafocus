@@ -51,7 +51,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                 final user = _users[index];
                 return ListTile(
                   title: Text('${user['first_name']} ${user['last_name']}'),
-                  subtitle: Text('Gesproken zaden: ${user['scanned_count']}'),
+                  subtitle: Text('Gescanden zaden: ${user['scanned_count']}'),
                   leading: CircleAvatar(
                     child: Text('${index + 1}'), // Rangnummer
                   ),
