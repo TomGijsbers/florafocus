@@ -47,24 +47,28 @@ class HomePage extends StatelessWidget {
                     label: "Statistieken",
                     route: '/statistics',
                     color: Colors.green[400]!,
+                    user: user, // Pass user data to GridItem
                   ),
                   GridItem(
                     icon: Icons.leaderboard,
                     label: "Klassement",
                     route: '/leaderboard',
                     color: Colors.green[600]!,
+                    user: user, // Pass user data to GridItem
                   ),
                   GridItem(
                     icon: Icons.settings,
                     label: "Instellingen",
                     route: '/settings',
                     color: Colors.green[500]!,
+                    user: user, // Pass user data to GridItem
                   ),
                   GridItem(
                     icon: Icons.person,
                     label: "Profiel",
                     route: '/profile',
                     color: Colors.green[700]!,
+                    user: user, // Pass user data to GridItem
                   ),
                 ],
               ),
@@ -89,19 +93,25 @@ class GridItem extends StatelessWidget {
   final String label;
   final String route;
   final Color color;
+  final Map<String, dynamic> user; // Add user data
 
   GridItem({
     required this.icon,
     required this.label,
     required this.route,
     required this.color,
+    required this.user, // Add user data
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, route);
+        Navigator.pushNamed(
+          context,
+          route,
+          arguments: user, // Pass user data
+        );
       },
       child: Container(
         decoration: BoxDecoration(

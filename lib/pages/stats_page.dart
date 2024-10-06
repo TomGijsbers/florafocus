@@ -2,8 +2,14 @@ import 'package:flutter/material.dart'; // Importeer de Flutter-material design 
 import '/widgets/statistics_header.dart'; // Importeer de StatisticsHeader widget
 
 class StatisticsPage extends StatelessWidget {
+  final Map<String, dynamic> user; // Add user data
+
+  StatisticsPage({required this.user}); // Add user data
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> scannedSeeds = user['scanned_seeds']; // Get scanned seeds
+
     // Bouw de UI van de StatisticsPage
     return Scaffold(
       appBar: AppBar(
@@ -27,22 +33,10 @@ class StatisticsPage extends StatelessWidget {
             SizedBox(height: 20), // Ruimte onder de header
             Expanded(
               child: ListView.builder(
-                itemCount: 5, // Aantal items dat weergegeven moet worden
+                itemCount: scannedSeeds
+                    .length, // Aantal items dat weergegeven moet worden
                 itemBuilder: (context, index) {
-                  List<String> seedNames = [
-                    "Zaadje 1", // Naam van het zaadje
-                    "Zaadje 2",
-                    "Zaadje 3",
-                    "Zaadje 4",
-                    "Zaadje 5",
-                  ];
-                  List<bool> isScanned = [
-                    true, // Scanstatus van het zaadje
-                    false,
-                    true,
-                    false,
-                    true,
-                  ];
+                  var seed = scannedSeeds[index];
 
                   return Card(
                     color: Colors.green[100], // Achtergrondkleur van de kaart
@@ -55,30 +49,22 @@ class StatisticsPage extends StatelessWidget {
                         vertical: 10), // Verticale marge tussen kaarten
                     child: ListTile(
                       title: Text(
-                        seedNames[index], // Toon de naam van het zaadje
+                        seed['seed_name'], // Toon de naam van het zaadje
                         style: TextStyle(
                           color: Colors.green[800],
                           fontFamily: 'Roboto', // Gebruik Roboto voor de naam
                         ), // Tekstkleur
                       ),
                       subtitle: Text(
-                        "Status: ${isScanned[index] ? "Gescand" : "Niet Gescand"}", // Toon de scanstatus
+                        "Fruit: ${seed['fruit_name']}\nSKU: ${seed['sku_code']}", // Toon de fruitnaam en SKU
                         style: TextStyle(
-                          color: isScanned[
-                                  index] // Kleur afhankelijk van de scanstatus
-                              ? Colors.green[600]
-                              : Colors.red[600],
+                          color: Colors.green[600],
                           fontFamily: 'Roboto', // Gebruik Roboto voor de status
                         ),
                       ),
                       leading: Icon(
-                        isScanned[index]
-                            ? Icons.check_circle
-                            : Icons
-                                .cancel, // Toon een icoon afhankelijk van de scanstatus
-                        color: isScanned[index]
-                            ? Colors.green[700]
-                            : Colors.red[700],
+                        Icons.check_circle,
+                        color: Colors.green[700],
                       ),
                     ),
                   );

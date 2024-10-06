@@ -18,10 +18,22 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) =>
             LoginPage(), // Ensure LoginPage is correctly referenced
-        '/home': (context) => HomePage(user: {'name': 'gebruiker'}),
         '/profile': (context) => ProfilePage(),
-        '/statistics': (context) => StatisticsPage(),
         '/leaderboard': (context) => LeaderboardPage(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/home') {
+          final user = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => HomePage(user: user),
+          );
+        } else if (settings.name == '/statistics') {
+          final user = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => StatisticsPage(user: user),
+          );
+        }
+        return null;
       },
     );
   }

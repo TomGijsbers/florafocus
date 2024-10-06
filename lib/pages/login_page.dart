@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/login_text.dart'; // Ensure this widget is correctly implemented
 import '../api/api_service.dart';
 import 'home_page.dart'; // Correct import for HomePage
+import 'stats_page.dart'; // Import for StatisticsPage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -19,11 +20,10 @@ class _LoginPageState extends State<LoginPage> {
 
     Map<String, dynamic>? user = await apiService.loginUser(email, password);
     if (user != null) {
-      Navigator.pushReplacement(
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(user: user),
-        ),
+        '/home',
+        arguments: user,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
