@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'pages/login_page.dart'; // Controleer of dit pad klopt
-import 'pages/home_page.dart'; // Controleer of dit pad klopt
+import 'pages/login_page.dart'; // Ensure this import is correct
+import 'pages/home_page.dart';
 import 'pages/profile_page.dart';
-import 'pages/stats_page.dart'; // Controleer of dit pad klopt
-import 'pages/leaderboard_page.dart'; // Voeg de import toe
+import 'pages/stats_page.dart';
+import 'pages/leaderboard_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,11 +16,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginPage(),
-        '/home': (context) => HomePage(),
+        '/': (context) =>
+            LoginPage(), // Ensure LoginPage is correctly referenced
+        '/home': (context) => HomePage(user: {'name': 'gebruiker'}),
         '/profile': (context) => ProfilePage(),
         '/statistics': (context) => StatisticsPage(),
-        '/leaderboard': (context) => LeaderboardPage(), // Voeg de route toe
+        '/leaderboard': (context) => LeaderboardPage(),
       },
     );
   }
