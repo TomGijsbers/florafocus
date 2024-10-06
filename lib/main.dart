@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) =>
             LoginPage(), // Ensure LoginPage is correctly referenced
-        '/profile': (context) => ProfilePage(),
+        '/profile': (context) => ProfilePage(
+            user: ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>),
         '/leaderboard': (context) => LeaderboardPage(),
       },
       onGenerateRoute: (settings) {

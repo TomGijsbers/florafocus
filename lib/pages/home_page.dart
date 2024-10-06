@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/camera_button.dart';
+import '../widgets/grid_item.dart'; // Import GridItem widget
 
 class HomePage extends StatelessWidget {
   final Map<String, dynamic> user;
@@ -84,56 +85,6 @@ class HomePage extends StatelessWidget {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-}
-
-class GridItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String route;
-  final Color color;
-  final Map<String, dynamic> user; // Add user data
-
-  GridItem({
-    required this.icon,
-    required this.label,
-    required this.route,
-    required this.color,
-    required this.user, // Add user data
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          route,
-          arguments: user, // Pass user data
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: Colors.white),
-            SizedBox(height: 10),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
