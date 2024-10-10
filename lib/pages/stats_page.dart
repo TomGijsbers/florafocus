@@ -2,13 +2,14 @@ import 'package:flutter/material.dart'; // Importeer de Flutter-material design 
 import '/widgets/statistics_header.dart'; // Importeer de StatisticsHeader widget
 
 class StatisticsPage extends StatelessWidget {
-  final Map<String, dynamic> user; // Add user data
+  final Map<String, dynamic> user; // Gebruikersgegevens
 
-  StatisticsPage({required this.user}); // Add user data
+  StatisticsPage({required this.user}); // Constructor met gebruikersgegevens
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> scannedSeeds = user['scanned_seeds']; // Get scanned seeds
+    List<dynamic> scannedSeeds =
+        user['scanned_seeds']; // Verkrijg de gescande zaadjes van de gebruiker
 
     // Bouw de UI van de StatisticsPage
     return Scaffold(
@@ -64,7 +65,7 @@ class StatisticsPage extends StatelessWidget {
                       ),
                       leading: Icon(
                         Icons.check_circle,
-                        color: Colors.green[700],
+                        color: Colors.green[700], // Icoon voor gescande zaadjes
                       ),
                     ),
                   );

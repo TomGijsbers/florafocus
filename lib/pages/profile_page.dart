@@ -10,7 +10,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Bouw de UI van de ProfilePage
     return Scaffold(
       appBar: AppBar(
         title: Text('Profiel',
@@ -26,7 +25,7 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 20), // Ruimte boven de header
             ProfileHeader(
                 userName:
-                    "${user['first_name']} ${user['last_name']}"), // Toon profielheader
+                    "${user['first_name']} ${user['last_name']}"), // Toon profielheader met naam
             SizedBox(height: 20), // Ruimte onder de header
             EditProfileButton(
               onPressed: () {
@@ -35,14 +34,13 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 20), // Ruimte onder de knop
             Text(
-              "Email: ${user['email']}",
+              "Email: ${user['email']}", // Toon het emailadres
               style: TextStyle(
-                fontSize: 18,
-                color: Colors.green[900],
-                fontFamily: 'Roboto',
+                fontSize: 18, // Tekstgrootte
+                color: Colors.green[900], // Tekstkleur
+                fontFamily: 'Roboto', // Tekstfont
               ),
             ),
-            SizedBox(height: 10), // Ruimte onder de email
           ],
         ),
       ),
