@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
-import '/widgets/about.dart'; // Importeer de AboutMeSection widget
 
 class ProfilePage extends StatelessWidget {
-  final Map<String, dynamic> user; // Add user data
+  final Map<String, dynamic> user; // Gebruikersdata
 
-  ProfilePage({required this.user}); // Add user data
+  ProfilePage(
+      {required this.user}); // Constructor met verplichte gebruikersdata
 
   @override
   Widget build(BuildContext context) {
-    // Provide a default value for age if it is null
-    int userAge = user['age'] ?? 0;
-
     // Bouw de UI van de ProfilePage
     return Scaffold(
       appBar: AppBar(
@@ -28,20 +25,15 @@ class ProfilePage extends StatelessWidget {
           children: [
             SizedBox(height: 20), // Ruimte boven de header
             ProfileHeader(
-                userName: "${user['first_name']} ${user['last_name']}",
-                userAge: userAge), // Toon profielheader
+                userName:
+                    "${user['first_name']} ${user['last_name']}"), // Toon profielheader
             SizedBox(height: 20), // Ruimte onder de header
             EditProfileButton(
               onPressed: () {
-                // Voeg functionaliteit toe voor het bewerken van het profiel
+                // Voeg hier de logica toe voor de bewerk profiel knop
               },
             ),
             SizedBox(height: 20), // Ruimte onder de knop
-            AboutMeSection(
-              description:
-                  'Hier kan je een korte beschrijving van jezelf geven.', // Beschrijving voor de "Over mij" sectie
-            ),
-            SizedBox(height: 20), // Ruimte onder de beschrijving
             Text(
               "Email: ${user['email']}",
               style: TextStyle(

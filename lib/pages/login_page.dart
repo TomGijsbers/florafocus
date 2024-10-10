@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/login_text.dart'; // Ensure this widget is correctly implemented
 import '../api/api_service.dart';
 import 'home_page.dart'; // Correct import for HomePage
-import 'stats_page.dart'; // Import for StatisticsPage
+import '../pages/stats_page.dart'; // Import for StatisticsPage
 
 class LoginPage extends StatefulWidget {
   @override

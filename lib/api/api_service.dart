@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://cute-waves-remain.loca.lt/users';
+  static const String baseUrl = 'https://dull-rocks-like.loca.lt/users';
 
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {

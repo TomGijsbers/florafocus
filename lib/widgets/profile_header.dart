@@ -2,12 +2,10 @@ import 'package:flutter/material.dart'; // Importeer de Flutter-material design 
 
 class ProfileHeader extends StatelessWidget {
   final String userName; // Gebruikersnaam
-  final int userAge; // Leeftijd van de gebruiker
 
   // Constructor voor de ProfileHeader widget
   const ProfileHeader({
     required this.userName, // Gebruikersnaam is verplicht
-    required this.userAge, // Leeftijd is verplicht
     Key? key,
   }) : super(key: key);
 
@@ -28,14 +26,6 @@ class ProfileHeader extends StatelessWidget {
           ), // Tekststijl
         ),
         SizedBox(height: 10), // Ruimte onder de gebruikersnaam
-        Text(
-          'Leeftijd: $userAge', // Toon de leeftijd
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.green[600],
-            fontFamily: 'Roboto', // Gebruik Roboto voor de leeftijd
-          ), // Tekststijl
-        ),
       ],
     );
   }
