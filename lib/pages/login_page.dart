@@ -1,98 +1,8 @@
-// import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
-// import '/widgets/login_text.dart'; // Importeer de aangepaste LoginTextField widget
-
-// class LoginPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     // Bouw de UI van de LoginPage
-//     return Scaffold(
-//       // Gebruik een Scaffold voor de basisstructuur
-//       appBar: AppBar(
-//         title: Text("Login"), // Titel van de app-balk
-//         backgroundColor: Colors
-//             .transparent, // Maak de achtergrond van de app-balk transparant
-//         elevation: 0, // Geen schaduw onder de app-balk
-//       ),
-//       body: Container(
-//         // Hoofdinhoud van de pagina
-//         decoration: BoxDecoration(
-//           // Voeg een gradient achtergrond toe
-//           gradient: LinearGradient(
-//             colors: [
-//               Colors.white, // Begin kleur van de gradient
-//               Colors.green[300]!, // Eind kleur van de gradient (groene tint)
-//             ],
-//             begin: Alignment.topLeft, // Beginpunt van de gradient
-//             end: Alignment.bottomRight, // Eindpunt van de gradient
-//           ),
-//         ),
-//         padding: EdgeInsets.all(16.0), // Voeg padding toe rondom de inhoud
-//         child: Center(
-//           // Center de inhoud binnen de container
-//           child: SingleChildScrollView(
-//             // Maak de inhoud scrollbaar
-//             child: Column(
-//               mainAxisAlignment:
-//                   MainAxisAlignment.center, // Centreer de kinderen in de kolom
-//               children: [
-//                 SizedBox(height: 40), // Voeg een lege ruimte toe bovenaan
-//                 Text(
-//                   "Welkom bij de FloraFocus", // Welkomstbericht
-//                   style: TextStyle(
-//                     fontSize: 28, // Lettergrootte
-//                     fontWeight: FontWeight.w600, // Vetgedrukt
-//                     color: Colors.black87, // Kleur van de tekst
-//                     fontFamily:
-//                         'Montserrat', // Gebruik het Montserrat lettertype
-//                   ),
-//                 ),
-//                 SizedBox(height: 40), // Voeg ruimte toe na de tekst
-//                 LoginTextField(
-//                     label: "Email"), // Aangepast invoerveld voor e-mail
-//                 SizedBox(height: 16), // Ruimte tussen de invoervelden
-//                 LoginTextField(
-//                     label: "Wachtwoord",
-//                     obscureText:
-//                         true), // Aangepast invoerveld voor wachtwoord (verborgen tekst)
-//                 SizedBox(height: 20), // Ruimte voor de knop
-//                 ElevatedButton(
-//                   // Login-knop
-//                   onPressed: () {
-//                     // Actie bij het indrukken van de knop
-//                     Navigator.pushReplacementNamed(
-//                         context, '/home'); // Navigeer naar de homepage
-//                   },
-//                   style: ElevatedButton.styleFrom(
-//                     backgroundColor:
-//                         Colors.green[600], // Groene kleur voor de knop
-//                     padding: EdgeInsets.symmetric(
-//                         horizontal: 40, vertical: 15), // Padding voor de knop
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(
-//                           10), // Afgeronde hoeken van de knop
-//                     ),
-//                     textStyle: TextStyle(
-//                       fontSize: 18, // Lettergrootte van de tekst op de knop
-//                       fontWeight: FontWeight.bold, // Vetgedrukt
-//                       fontFamily:
-//                           'Roboto', // Gebruik het Roboto lettertype voor de knop
-//                     ),
-//                   ),
-//                   child: Text("Login"), // Tekst op de knop
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// API service
 import 'package:flutter/material.dart';
-import '../widgets/login_text.dart';
-import '../api/api_service.dart';
+import '../widgets/login_text.dart'; // Zorg ervoor dat dit widget correct geïmplementeerd is
+import '../api/api_service.dart'; // Importeer de ApiService
+import 'home_page.dart'; // Correcte import voor HomePage
+import '../pages/stats_page.dart'; // Import voor de statistiekenpagina
 
 class LoginPage extends StatefulWidget {
   @override
@@ -100,18 +10,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final ApiService apiService = ApiService();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final ApiService apiService = ApiService(); // Initialiseer de API service
+  final TextEditingController emailController =
+      TextEditingController(); // Controller voor het email veld
+  final TextEditingController passwordController =
+      TextEditingController(); // Controller voor het wachtwoord veld
 
+  // Functie om in te loggen
   void _login() async {
     String email = emailController.text;
     String password = passwordController.text;
 
-    bool success = await apiService.loginUser(email, password);
-    if (success) {
-      Navigator.pushReplacementNamed(context, '/home');
+    // Controleer de inloggegevens via de API
+    Map<String, dynamic>? user = await apiService.loginUser(email, password);
+    if (user != null) {
+      // Als de inloggegevens correct zijn, navigeer naar de homepage met user data
+      Navigator.pushReplacementNamed(
+        context,
+        '/home',
+        arguments: user,
+      );
     } else {
+      // Toon een foutmelding als de inloggegevens onjuist zijn
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login mislukt. Controleer uw inloggegevens.')),
       );
@@ -124,15 +44,16 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text("Login"),
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        elevation: 0, // Geen schaduw onder de AppBar
       ),
       body: Container(
+        // Achtergrond met een kleurverloop
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.white,
-              Colors.green[300]!,
-            ],
+              Colors.green[300]!
+            ], // Wit naar groen verloop
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -141,9 +62,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Uitlijning in het midden
               children: [
                 SizedBox(height: 40),
+                // Welkomsttekst
                 Text(
                   "Welkom bij de FloraFocus",
                   style: TextStyle(
@@ -154,24 +77,30 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 40),
+                // Invoerveld voor email
                 LoginTextField(
                   label: "Email",
-                  controller: emailController, // Controller voor email
+                  controller: emailController,
                 ),
                 SizedBox(height: 16),
+                // Invoerveld voor wachtwoord
                 LoginTextField(
                   label: "Wachtwoord",
-                  obscureText: true,
-                  controller: passwordController, // Controller voor wachtwoord
+                  obscureText: true, // Verberg de tekst voor wachtwoord
+                  controller: passwordController,
                 ),
                 SizedBox(height: 20),
+                // Login knop
                 ElevatedButton(
-                  onPressed: _login,
+                  onPressed:
+                      _login, // Login functie wordt aangeroepen bij klikken
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[600],
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15), // Grootte van de knop
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius:
+                          BorderRadius.circular(10), // Afgeronde hoeken
                     ),
                     textStyle: TextStyle(
                       fontSize: 18,

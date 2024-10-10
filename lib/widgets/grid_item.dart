@@ -5,40 +5,44 @@ class GridItem extends StatelessWidget {
   final String label; // Label voor de grid item
   final String route; // Route voor navigatie bij het klikken
   final Color color; // Kleur van het icoon
+  final Map<String, dynamic> user; // Add user data
 
-  // Constructor voor de GridItem widget
-  const GridItem({
-    required this.icon, // Icon is verplicht
-    required this.label, // Label is verplicht
-    required this.route, // Route is verplicht
-    required this.color, // Kleur is verplicht
-    Key? key, // Sleutel voor widget identificatie (optioneel)
-  }) : super(key: key);
+  GridItem({
+    required this.icon,
+    required this.label,
+    required this.route,
+    required this.color,
+    required this.user, // Add user data
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Bouw de UI van het GridItem
     return GestureDetector(
       onTap: () {
-        // Navigeren naar de opgegeven route wanneer het item wordt aangeraakt
-        if (ModalRoute.of(context)?.settings.name != route) {
-          Navigator.pushNamed(context, route);
-        }
+        Navigator.pushNamed(
+          context,
+          route,
+          arguments: user, // Pass user data
+        );
       },
-      child: Card(
-        elevation: 6, // Schaduw voor diepte-effect
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)), // Afgeronde hoeken
-        color: Colors.green[100], // Achtergrondkleur van het kaartje
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Centreer de inhoud van de kolom
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 48, color: color), // Toon het icoon
-            SizedBox(height: 8), // Ruimte tussen icoon en label
-            Text(label,
-                style: TextStyle(
-                    fontSize: 18, color: Colors.green[900])), // Toon het label
+            Icon(icon, size: 50, color: Colors.white),
+            SizedBox(height: 10),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+              ),
+            ),
           ],
         ),
       ),

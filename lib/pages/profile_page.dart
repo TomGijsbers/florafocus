@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
-import '/widgets/about.dart'; // Importeer de AboutMeSection widget
 
 class ProfilePage extends StatelessWidget {
-  final String userName = 'Jan Jansen'; // Gebruikersnaam
-  final int userAge = 30; // Leeftijd van de gebruiker
+  final Map<String, dynamic> user; // Gebruikersdata
+
+  ProfilePage(
+      {required this.user}); // Constructor met verplichte gebruikersdata
 
   @override
   Widget build(BuildContext context) {
-    // Bouw de UI van de ProfilePage
     return Scaffold(
       appBar: AppBar(
         title: Text('Profiel',
@@ -24,17 +24,22 @@ class ProfilePage extends StatelessWidget {
           children: [
             SizedBox(height: 20), // Ruimte boven de header
             ProfileHeader(
-                userName: userName, userAge: userAge), // Toon profielheader
+                userName:
+                    "${user['first_name']} ${user['last_name']}"), // Toon profielheader met naam
             SizedBox(height: 20), // Ruimte onder de header
             EditProfileButton(
               onPressed: () {
-                // Voeg functionaliteit toe voor het bewerken van het profiel
+                // Voeg hier de logica toe voor de bewerk profiel knop
               },
             ),
             SizedBox(height: 20), // Ruimte onder de knop
-            AboutMeSection(
-              description:
-                  'Hier kan je een korte beschrijving van jezelf geven.', // Beschrijving voor de "Over mij" sectie
+            Text(
+              "Email: ${user['email']}", // Toon het emailadres
+              style: TextStyle(
+                fontSize: 18, // Tekstgrootte
+                color: Colors.green[900], // Tekstkleur
+                fontFamily: 'Roboto', // Tekstfont
+              ),
             ),
           ],
         ),
