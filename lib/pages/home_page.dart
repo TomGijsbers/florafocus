@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), // Ronde hoeken
               ),
               child: Text(
-                "Hello ${user['first_name']}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
+                "Hello ${user['name']}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
                 style: TextStyle(
                   fontSize: 18, // Tekstgrootte
                   color: Colors.green[900], // Tekstkleur
