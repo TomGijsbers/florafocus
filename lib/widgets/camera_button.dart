@@ -36,7 +36,7 @@ class CameraButton extends StatelessWidget {
             ),
             SizedBox(width: 8), // Ruimte tussen het icoon en de tekst
             Text(
-              "Scan een zaadje!", // Tekst op de knop
+              "Scan een verpakking!", // Tekst op de knop
               style: TextStyle(
                 color: Colors.white, // Kleur van de tekst
                 fontSize: 16, // Lettergrootte
