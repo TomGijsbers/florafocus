@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/login_text.dart'; // Zorg ervoor dat dit widget correct geïmplementeerd is
-import '../api/api_service.dart'; // Importeer de ApiService
-import 'home_page.dart'; // Correcte import voor HomePage
-import '../pages/stats_page.dart'; // Import voor de statistiekenpagina
+import '../widgets/login_text.dart';
+import '../api/api_service.dart';
+import 'home_page.dart';
+import '../pages/stats_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,32 +12,158 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final ApiService apiService = ApiService(); // Initialiseer de API service
-  final TextEditingController emailController =
-      TextEditingController(); // Controller voor het email veld
-  final TextEditingController passwordController =
-      TextEditingController(); // Controller voor het wachtwoord veld
+  final ApiService apiService = ApiService();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  // Functie om in te loggen
+  // Controllers for new account creation
+  final TextEditingController newEmailController = TextEditingController();
+  final TextEditingController newNameController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+
   void _login() async {
     String email = emailController.text;
     String password = passwordController.text;
 
-    // Controleer de inloggegevens via de API
     Map<String, dynamic>? user = await apiService.loginUser(email, password);
     if (user != null) {
-      // Als de inloggegevens correct zijn, navigeer naar de homepage met user data
       Navigator.pushReplacementNamed(
         context,
         '/home',
         arguments: user,
       );
     } else {
-      // Toon een foutmelding als de inloggegevens onjuist zijn
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login mislukt. Controleer uw inloggegevens.')),
       );
     }
+  }
+
+  void _createAccount() async {
+    String email = newEmailController.text;
+    String name = newNameController.text;
+    String password = newPasswordController.text;
+
+    var response = await http.post(
+      Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'name': name,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Account succesvol aangemaakt.')),
+      );
+      try {
+        Map<String, dynamic> user = jsonDecode(response.body);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+        );
+      } catch (e) {
+        print('Error decoding server response: $e');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage(user: {'name': name})),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Account aanmaken mislukt.')),
+      );
+    }
+  }
+
+// OLD YAYO
+  // void _createAccount() async {
+  //   String email = newEmailController.text;
+  //   String name = newNameController.text;
+  //   String password = newPasswordController.text;
+
+  //   var response = await http.post(
+  //     Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       'email': email,
+  //       'name': name,
+  //       'password': password,
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     Navigator.of(context).pop();
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Account succesvol aangemaakt.')),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Account aanmaken mislukt.')),
+  //     );
+  //   }
+  // }
+
+  void _showCreateAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Maak een nieuw account aan'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              LoginTextField(
+                label: "Email",
+                controller: newEmailController,
+              ),
+              SizedBox(height: 16),
+              LoginTextField(
+                label: "Naam",
+                controller: newNameController,
+              ),
+              SizedBox(height: 16),
+              LoginTextField(
+                label: "Wachtwoord",
+                obscureText: true,
+                controller: newPasswordController,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Annuleren'),
+            ),
+            ElevatedButton(
+              onPressed: _createAccount,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[600],
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              child: Text('Aanmaken'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -44,16 +172,15 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text("Login"),
         backgroundColor: Colors.transparent,
-        elevation: 0, // Geen schaduw onder de AppBar
+        elevation: 0,
       ),
       body: Container(
-        // Achtergrond met een kleurverloop
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.white,
-              Colors.green[300]!
-            ], // Wit naar groen verloop
+              Colors.green[300]!,
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -62,11 +189,9 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Uitlijning in het midden
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 40),
-                // Welkomsttekst
                 Text(
                   "Welkom bij de FloraFocus",
                   style: TextStyle(
@@ -77,30 +202,24 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 40),
-                // Invoerveld voor email
                 LoginTextField(
                   label: "Email",
                   controller: emailController,
                 ),
                 SizedBox(height: 16),
-                // Invoerveld voor wachtwoord
                 LoginTextField(
                   label: "Wachtwoord",
-                  obscureText: true, // Verberg de tekst voor wachtwoord
+                  obscureText: true,
                   controller: passwordController,
                 ),
                 SizedBox(height: 20),
-                // Login knop
                 ElevatedButton(
-                  onPressed:
-                      _login, // Login functie wordt aangeroepen bij klikken
+                  onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[600],
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15), // Grootte van de knop
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Afgeronde hoeken
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     textStyle: TextStyle(
                       fontSize: 18,
@@ -109,6 +228,23 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   child: Text("Login"),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _showCreateAccountDialog,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[600],
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  child: Text("Maak een nieuw account aan"),
                 ),
               ],
             ),
