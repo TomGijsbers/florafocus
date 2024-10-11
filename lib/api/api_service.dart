@@ -4,7 +4,7 @@ import 'package:http/http.dart'
 
 class ApiService {
   static const String baseUrl =
-      'https://dull-rocks-like.loca.lt/users'; // De basis-URL van de API
+      'https://tiny-geese-brake.loca.lt/users'; // De basis-URL van de API
 
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {
