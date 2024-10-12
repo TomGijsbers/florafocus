@@ -18,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController _nameController; // Controller voor de naam
   late TextEditingController _emailController; // Controller voor het emailadres
   final ApiService apiService = ApiService(); // Instantie van ApiService
+  int _productCount = 0; // Aantal producten
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _fetchUserData() async {
     try {
       List<Map<String, dynamic>> users = await apiService.fetchUsers();
+      print('Fetched users: $users'); // Debug print to check fetched users
       // Zoek de gebruiker met het overeenkomende emailadres
       Map<String, dynamic>? user = users.firstWhere(
         (user) => user['email'] == widget.user['email'],
@@ -49,9 +51,11 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _nameController.text = user['name'];
           _emailController.text = user['email'];
+          _productCount =
+              user['productSkucodes']?.length ?? 0; // Aantal producten
         });
         print(
-            'User data updated: ${user['name']}, ${user['email']}'); // Debug print
+            'User data updated: ${user['name']}, ${user['email']}, Product count: $_productCount'); // Debug print
       } else {
         print('User not found'); // Debug print
       }
@@ -167,6 +171,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 20), // Ruimte onder de knop
                 Text(
                   "Email: ${_emailController.text}", // Toon het emailadres
+                  style: TextStyle(
+                    fontSize: 18, // Tekstgrootte
+                    color: Colors.green[900], // Tekstkleur
+                    fontFamily: 'Roboto', // Tekstfont
+                  ),
+                ),
+                SizedBox(height: 10), // Ruimte onder het emailadres
+                Text(
+                  "Aantal producten: $_productCount", // Toon het aantal producten
                   style: TextStyle(
                     fontSize: 18, // Tekstgrootte
                     color: Colors.green[900], // Tekstkleur

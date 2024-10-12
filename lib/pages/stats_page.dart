@@ -1,71 +1,63 @@
-import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
-import '/widgets/statistics_header.dart'; // Importeer de StatisticsHeader widget
+import 'package:flutter/material.dart';
+import '/widgets/statistics_header.dart';
 
 class StatisticsPage extends StatelessWidget {
-  final Map<String, dynamic> user; // Gebruikersgegevens
+  final Map<String, dynamic> user;
 
-  StatisticsPage({required this.user}); // Constructor met gebruikersgegevens
+  StatisticsPage({required this.user});
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> scannedSeeds =
-        user['scanned_seeds']; // Verkrijg de gescande zaadjes van de gebruiker
+    List<dynamic> scannedSeeds = user['scanned_seeds'];
 
-    // Bouw de UI van de StatisticsPage
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Statistieken',
-          style: TextStyle(
-              fontFamily: 'Roboto'), // Gebruik Roboto voor de app-balk titel
-        ), // Titel van de app
-        backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
+          style: TextStyle(fontFamily: 'Roboto'),
+        ),
+        backgroundColor: Colors.green[700],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Padding rondom de body
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Uitlijnen aan de linkerkant
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StatisticsHeader(
-              text:
-                  "Hier zijn je statistieken van de gescande zaadjes.", // Tekst voor de header
+              text: "Hier zijn je statistieken van de gescande zaadjes.",
             ),
-            SizedBox(height: 20), // Ruimte onder de header
+            SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: scannedSeeds
-                    .length, // Aantal items dat weergegeven moet worden
+                itemCount: scannedSeeds.length,
                 itemBuilder: (context, index) {
                   var seed = scannedSeeds[index];
 
                   return Card(
-                    color: Colors.green[100], // Achtergrondkleur van de kaart
-                    elevation: 4, // Schaduw van de kaart
+                    color: Colors.green[100],
+                    elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(12), // Afgeronde hoeken
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: EdgeInsets.symmetric(
-                        vertical: 10), // Verticale marge tussen kaarten
+                    margin: EdgeInsets.symmetric(vertical: 10),
                     child: ListTile(
                       title: Text(
-                        seed['seed_name'], // Toon de naam van het zaadje
+                        seed['seed_name'],
                         style: TextStyle(
                           color: Colors.green[800],
-                          fontFamily: 'Roboto', // Gebruik Roboto voor de naam
-                        ), // Tekstkleur
+                          fontFamily: 'Roboto',
+                        ),
                       ),
                       subtitle: Text(
-                        "Fruit: ${seed['fruit_name']}\nSKU: ${seed['sku_code']}", // Toon de fruitnaam en SKU
+                        "Fruit: ${seed['fruit_name']}\nSKU: ${seed['sku_code']}",
                         style: TextStyle(
                           color: Colors.green[600],
-                          fontFamily: 'Roboto', // Gebruik Roboto voor de status
+                          fontFamily: 'Roboto',
                         ),
                       ),
                       leading: Icon(
                         Icons.check_circle,
-                        color: Colors.green[700], // Icoon voor gescande zaadjes
+                        color: Colors.green[700],
                       ),
                     ),
                   );

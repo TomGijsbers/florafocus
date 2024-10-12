@@ -4,7 +4,9 @@ import 'package:http/http.dart'
 
 class ApiService {
   static const String baseUrl =
-      'http://localhost:8083/api/user'; // De basis-URL van de API
+      'http://10.0.2.2:8083/api/user'; // De basis-URL van de API
+  static const String productUrl =
+      'http://10.0.2.2:8080/api/product/all'; // De URL voor producten
 
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {
@@ -34,32 +36,68 @@ class ApiService {
   // Functie om een gebruiker te authentiseren en de gebruikersdata terug te geven
   Future<Map<String, dynamic>?> loginUser(String email, String password) async {
     try {
-      final response = await http.get(Uri.parse(
-          '$baseUrl?email=$email')); // Haal gebruikersgegevens op met het opgegeven emailadres
+      final response = await http.get(Uri.parse('$baseUrl?email=$email'));
 
       if (response.statusCode == 200) {
-        List<dynamic> users = json.decode(
-            response.body); // Converteer de JSON response naar een lijst
+        List<dynamic> users = json.decode(response.body);
         if (users.isNotEmpty) {
-          final user = users[0]; // Selecteer de eerste gebruiker
+          final user = users[0];
           if (user['password'] == password) {
-            return user; // Login geslaagd, retourneer de gebruikersgegevens
+            // Haal de gescande zaadjes op
+            final userId = user['id'];
+            final products = await fetchUserProducts(userId);
+            user['scanned_seeds'] = products;
+            return user;
           } else {
-            print(
-                'Wachtwoord onjuist'); // Toon een melding bij een onjuist wachtwoord
+            print('Wachtwoord onjuist');
           }
         } else {
-          print(
-              'Gebruiker niet gevonden'); // Toon een melding als de gebruiker niet wordt gevonden
+          print('Gebruiker niet gevonden');
         }
       } else {
-        print(
-            'Response status: ${response.statusCode}'); // Toon de response code
-        print('Response body: ${response.body}'); // Toon de response body
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
       }
     } catch (e) {
-      print('Error tijdens het inloggen: $e'); // Print de foutmelding
+      print('Error tijdens het inloggen: $e');
     }
-    return null; // Retourneer null bij mislukte login
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchUserProducts(int userId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/$userId/products'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(data);
+      } else {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to load user products');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load user products');
+    }
+  }
+
+  // Functie om producten op te halen
+  Future<List<Map<String, dynamic>>> fetchProducts() async {
+    try {
+      final response = await http.get(Uri.parse(productUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(data);
+      } else {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load products');
+    }
   }
 }

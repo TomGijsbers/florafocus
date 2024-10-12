@@ -43,12 +43,12 @@ class LeaderboardItem extends StatelessWidget {
             ),
           ),
           SizedBox(width: 16.0), // Ruimte tussen de cirkel en de tekst
-          // Toon de naam van de gebruiker en het aantal gescande zaadjes
+          // Toon de naam van de gebruiker en het aantal gescande producten
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${user['first_name']} ${user['last_name']}', // Naam van de gebruiker
+                user['name'], // Naam van de gebruiker
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.green[900],
@@ -56,7 +56,7 @@ class LeaderboardItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Zaadjes gescand: ${user['scanned_seeds'].length}', // Aantal gescande zaadjes
+                'Producten gescand: ${user['scanned_count']}', // Aantal gescande producten
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.green[700],
