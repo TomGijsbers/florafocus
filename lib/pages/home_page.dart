@@ -59,9 +59,9 @@ class HomePage extends StatelessWidget {
                     user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
-                    icon: Icons.settings, // Icoon voor instellingen
-                    label: "Instellingen", // Label voor instellingen
-                    route: '/settings', // Route naar instellingenpagina
+                    icon: Icons.shopping_bag, // Icoon voor producten
+                    label: "Producten", // Label voor producten
+                    route: '/products', // Route naar productpagina
                     color: Colors.green[500]!, // Kleur van het item
                     user: user, // Gebruikersdata meegeven
                   ),

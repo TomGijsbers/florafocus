@@ -27,10 +27,9 @@ class _LoginPageState extends State<LoginPage> {
 
     Map<String, dynamic>? user = await apiService.loginUser(email, password);
     if (user != null) {
-      Navigator.pushReplacementNamed(
+      Navigator.pushReplacement(
         context,
-        '/home',
-        arguments: user,
+        MaterialPageRoute(builder: (context) => HomePage(user: user)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,36 +79,6 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
-// OLD YAYO
-  // void _createAccount() async {
-  //   String email = newEmailController.text;
-  //   String name = newNameController.text;
-  //   String password = newPasswordController.text;
-
-  //   var response = await http.post(
-  //     Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'email': email,
-  //       'name': name,
-  //       'password': password,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     Navigator.of(context).pop();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Account succesvol aangemaakt.')),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Account aanmaken mislukt.')),
-  //     );
-  //   }
-  // }
 
   void _showCreateAccountDialog() {
     showDialog(

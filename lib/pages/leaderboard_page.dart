@@ -26,12 +26,12 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       // Haal de gebruikers op van de API
       List<Map<String, dynamic>> users = await _apiService.fetchUsers();
 
-      // Voeg een 'scanned_count' toe voor elke gebruiker gebaseerd op het aantal gescande zaadjes
+      // Voeg een 'scanned_count' toe voor elke gebruiker gebaseerd op het aantal gescande producten
       users.forEach((user) {
-        user['scanned_count'] = user['scanned_seeds']?.length ?? 0;
+        user['scanned_count'] = user['productSkucodes']?.length ?? 0;
       });
 
-      // Sorteer de gebruikers op basis van het aantal gescande zaadjes, aflopend
+      // Sorteer de gebruikers op basis van het aantal gescande producten, aflopend
       users.sort((a, b) => b['scanned_count'].compareTo(a['scanned_count']));
 
       // Update de state met de gesorteerde gebruikers

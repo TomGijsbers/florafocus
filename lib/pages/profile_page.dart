@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
+import '../api/api_service.dart'; // Importeer de ApiService
 
 class ProfilePage extends StatefulWidget {
   final Map<String, dynamic> user; // Gebruikersdata in de vorm van een map
@@ -14,29 +15,53 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late TextEditingController
-      _firstNameController; // Controller voor de voornaam
-  late TextEditingController
-      _lastNameController; // Controller voor de achternaam
+  late TextEditingController _nameController; // Controller voor de naam
   late TextEditingController _emailController; // Controller voor het emailadres
+  final ApiService apiService = ApiService(); // Instantie van ApiService
+  int _productCount = 0; // Aantal producten
 
   @override
   void initState() {
     super.initState(); // Voer de initState van de superclass uit
     // Initialiseer de controllers met de huidige waarde van de gebruikersdata
-    _firstNameController =
-        TextEditingController(text: widget.user['first_name']);
-    _lastNameController = TextEditingController(text: widget.user['last_name']);
+    _nameController = TextEditingController(text: widget.user['name']);
     _emailController = TextEditingController(text: widget.user['email']);
+    _fetchUserData(); // Haal de gebruikersdata op van de API
   }
 
   @override
   void dispose() {
     // Ruim de controllers op wanneer de widget wordt verwijderd
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+    _nameController.dispose();
     _emailController.dispose();
     super.dispose(); // Voer de dispose van de superclass uit
+  }
+
+  void _fetchUserData() async {
+    try {
+      List<Map<String, dynamic>> users = await apiService.fetchUsers();
+      print('Fetched users: $users'); // Debug print to check fetched users
+      // Zoek de gebruiker met het overeenkomende emailadres
+      Map<String, dynamic>? user = users.firstWhere(
+        (user) => user['email'] == widget.user['email'],
+        orElse: () => {},
+      );
+      if (user.isNotEmpty) {
+        // Controleer of de gebruiker niet leeg is
+        setState(() {
+          _nameController.text = user['name'];
+          _emailController.text = user['email'];
+          _productCount =
+              user['productSkucodes']?.length ?? 0; // Aantal producten
+        });
+        print(
+            'User data updated: ${user['name']}, ${user['email']}, Product count: $_productCount'); // Debug print
+      } else {
+        print('User not found'); // Debug print
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
   }
 
   void _showEditProfileModal(BuildContext context) {
@@ -52,25 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisSize: MainAxisSize.min, // Minimale hoogte van de kolom
               children: [
                 TextField(
-                  controller:
-                      _firstNameController, // Controller voor de voornaam
+                  controller: _nameController, // Controller voor de naam
                   decoration: InputDecoration(
-                    labelText: 'Voornaam', // Label voor het tekstveld
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          10), // Hoeken van de rand afronden
-                    ),
-                    filled: true, // Vul het tekstveld
-                    fillColor:
-                        Colors.grey[200], // Achtergrondkleur van het tekstveld
-                  ),
-                ),
-                SizedBox(height: 10), // Ruimte tussen de tekstvelden
-                TextField(
-                  controller:
-                      _lastNameController, // Controller voor de achternaam
-                  decoration: InputDecoration(
-                    labelText: 'Achternaam', // Label voor het tekstveld
+                    labelText: 'Naam', // Label voor het tekstveld
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
                           10), // Hoeken van de rand afronden
@@ -113,8 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 setState(() {
                   // Werk de gebruikersdata bij met de waarden uit de tekstvelden
-                  widget.user['first_name'] = _firstNameController.text;
-                  widget.user['last_name'] = _lastNameController.text;
+                  widget.user['name'] = _nameController.text;
                   widget.user['email'] = _emailController.text;
                 });
                 Navigator.of(context)
@@ -152,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 20), // Ruimte boven de header
                 ProfileHeader(
                     userName:
-                        "${widget.user['first_name']} ${widget.user['last_name']}"), // Toon profielheader met naam
+                        _nameController.text), // Toon profielheader met naam
                 SizedBox(height: 20), // Ruimte onder de header
                 EditProfileButton(
                   onPressed: () {
@@ -162,7 +170,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 20), // Ruimte onder de knop
                 Text(
-                  "Email: ${widget.user['email']}", // Toon het emailadres
+                  "Email: ${_emailController.text}", // Toon het emailadres
+                  style: TextStyle(
+                    fontSize: 18, // Tekstgrootte
+                    color: Colors.green[900], // Tekstkleur
+                    fontFamily: 'Roboto', // Tekstfont
+                  ),
+                ),
+                SizedBox(height: 10), // Ruimte onder het emailadres
+                Text(
+                  "Aantal producten: $_productCount", // Toon het aantal producten
                   style: TextStyle(
                     fontSize: 18, // Tekstgrootte
                     color: Colors.green[900], // Tekstkleur
