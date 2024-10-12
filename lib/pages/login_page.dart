@@ -21,16 +21,26 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController newNameController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
 
+  bool _isLoading = false; // Voeg dit toe voor de laadstatus
+
   void _login() async {
+    setState(() {
+      _isLoading = true; // Zet de laadstatus op true
+    });
+
     String email = emailController.text;
     String password = passwordController.text;
 
     Map<String, dynamic>? user = await apiService.loginUser(email, password);
+
+    setState(() {
+      _isLoading = false; // Zet de laadstatus op false
+    });
+
     if (user != null) {
-      Navigator.pushReplacementNamed(
+      Navigator.pushReplacement(
         context,
-        '/home',
-        arguments: user,
+        MaterialPageRoute(builder: (context) => HomePage(user: user)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,12 +50,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _createAccount() async {
+    setState(() {
+      _isLoading = true; // Zet de laadstatus op true
+    });
+
     String email = newEmailController.text;
     String name = newNameController.text;
     String password = newPasswordController.text;
 
     var response = await http.post(
-      Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
+      Uri.parse('http://10.0.2.2:8083/api/user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -55,6 +69,10 @@ class _LoginPageState extends State<LoginPage> {
         'password': password,
       }),
     );
+
+    setState(() {
+      _isLoading = false; // Zet de laadstatus op false
+    });
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,36 +98,6 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
-// OLD YAYO
-  // void _createAccount() async {
-  //   String email = newEmailController.text;
-  //   String name = newNameController.text;
-  //   String password = newPasswordController.text;
-
-  //   var response = await http.post(
-  //     Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'email': email,
-  //       'name': name,
-  //       'password': password,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     Navigator.of(context).pop();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Account succesvol aangemaakt.')),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Account aanmaken mislukt.')),
-  //     );
-  //   }
-  // }
 
   void _showCreateAccountDialog() {
     showDialog(
@@ -174,83 +162,87 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              Colors.green[300]!,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        padding: EdgeInsets.all(16.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 40),
-                Text(
-                  "Welkom bij de FloraFocus",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                    fontFamily: 'Montserrat',
+      body: _isLoading // Controleer de laadstatus
+          ? Center(child: CircularProgressIndicator()) // Toon laadindicator
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.green[300]!,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              padding: EdgeInsets.all(16.0),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 40),
+                      Text(
+                        "Welkom bij de FloraFocus",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      LoginTextField(
+                        label: "Email",
+                        controller: emailController,
+                      ),
+                      SizedBox(height: 16),
+                      LoginTextField(
+                        label: "Wachtwoord",
+                        obscureText: true,
+                        controller: passwordController,
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[600],
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        child: Text("Login"),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _showCreateAccountDialog,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[600],
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        child: Text("Maak een nieuw account aan"),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 40),
-                LoginTextField(
-                  label: "Email",
-                  controller: emailController,
-                ),
-                SizedBox(height: 16),
-                LoginTextField(
-                  label: "Wachtwoord",
-                  obscureText: true,
-                  controller: passwordController,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                  child: Text("Login"),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _showCreateAccountDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                  child: Text("Maak een nieuw account aan"),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

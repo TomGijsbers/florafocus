@@ -4,13 +4,13 @@ import 'package:http/http.dart'
 
 class ApiService {
   static const String baseUrl =
-      'https://dull-eggs-flash.loca.lt/users'; // De basis-URL van de API
+      'http://localhost:8083/api/user'; // De basis-URL van de API
 
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {
     try {
-      final response = await http
-          .get(Uri.parse(baseUrl)); // Haal gebruikersgegevens op van de API
+      final response = await http.get(
+          Uri.parse('$baseUrl/all')); // Haal gebruikersgegevens op van de API
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(

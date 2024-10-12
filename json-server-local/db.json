@@ -3,8 +3,7 @@
     {
       "id": 1,
       "email": "george.bluth@reqres.in",
-      "first_name": "George",
-      "last_name": "Bluth",
+      "name": "George Bluth",
       "password": "password123",
       "scanned_seeds": [
         {
@@ -22,8 +21,7 @@
     {
       "id": 2,
       "email": "janet.weaver@ping.be",
-      "first_name": "Janet",
-      "last_name": "Weaver",
+      "name": "Janet Weaver",
       "password": "mypassword456",
       "scanned_seeds": [
         {
@@ -46,8 +44,7 @@
     {
       "id": 3,
       "email": "eve.holt@request.com",
-      "first_name": "Eve",
-      "last_name": "Holt",
+      "name": "Eve Holt",
       "password": "securepass789",
       "scanned_seeds": [
         {
@@ -75,8 +72,7 @@
     {
       "id": 4,
       "email": "charles.morris@idaho.org",
-      "first_name": "Charles",
-      "last_name": "Morris",
+      "name": "Charles Morris",
       "password": "charlespass111",
       "scanned_seeds": [
         {
@@ -94,8 +90,7 @@
     {
       "id": 5,
       "email": "tracey.ramos@google.com",
-      "first_name": "Tracey",
-      "last_name": "Ramos",
+      "name": "Tracey Ramos",
       "password": "traceypass333",
       "scanned_seeds": [
         {
