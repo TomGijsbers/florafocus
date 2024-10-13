@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _fetchUserData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://10.0.2.2:8083/api/user/all'));
+          await http.get(Uri.parse('http://docker.taile0d53a.ts.net:8083/api/user/all'));
       if (response.statusCode == 200) {
         List<Map<String, dynamic>> users =
             List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _updateUserData(int userId, String name, String email) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8083/api/user/$userId'),
+        Uri.parse('http://docker.taile0d53a.ts.net:8083/api/user/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
