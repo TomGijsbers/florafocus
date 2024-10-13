@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
 import '../api/api_service.dart'; // Importeer de ApiService
@@ -39,25 +42,32 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _fetchUserData() async {
     try {
-      List<Map<String, dynamic>> users = await apiService.fetchUsers();
-      print('Fetched users: $users'); // Debug print to check fetched users
-      // Zoek de gebruiker met het overeenkomende emailadres
-      Map<String, dynamic>? user = users.firstWhere(
-        (user) => user['email'] == widget.user['email'],
-        orElse: () => {},
-      );
-      if (user.isNotEmpty) {
-        // Controleer of de gebruiker niet leeg is
-        setState(() {
-          _nameController.text = user['name'];
-          _emailController.text = user['email'];
-          _productCount =
-              user['productSkucodes']?.length ?? 0; // Aantal producten
-        });
-        print(
-            'User data updated: ${user['name']}, ${user['email']}, Product count: $_productCount'); // Debug print
+      final response =
+          await http.get(Uri.parse('http://10.0.2.2:8083/api/user/all'));
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> users =
+            List<Map<String, dynamic>>.from(json.decode(response.body));
+        print('Fetched users: $users'); // Debug print to check fetched users
+        // Zoek de gebruiker met de overeenkomende naam
+        Map<String, dynamic>? user = users.firstWhere(
+          (user) => user['name'] == widget.user['name'],
+          orElse: () => {},
+        );
+        if (user.isNotEmpty) {
+          // Controleer of de gebruiker niet leeg is
+          setState(() {
+            _nameController.text = user['name'];
+            _emailController.text = user['email'];
+            _productCount =
+                user['productSkucodes']?.length ?? 0; // Aantal producten
+          });
+          print(
+              'User data updated: ${user['name']}, ${user['email']}, Product count: $_productCount'); // Debug print
+        } else {
+          print('User not found'); // Debug print
+        }
       } else {
-        print('User not found'); // Debug print
+        print('Failed to fetch users: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching user data: $e');
