@@ -74,6 +74,29 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _updateUserData(int userId, String name, String email) async {
+    try {
+      final response = await http.put(
+        Uri.parse('http://10.0.2.2:8083/api/user/$userId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'name': name,
+          'email': email,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('User data updated successfully');
+      } else {
+        print('Failed to update user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
+  }
+
   void _showEditProfileModal(BuildContext context) {
     // Functie om het bewerk profiel dialoogvenster te tonen
     showDialog(
@@ -129,11 +152,15 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                final userId = widget.user['id'];
+                final name = _nameController.text;
+                final email = _emailController.text;
+                await _updateUserData(userId, name, email);
                 setState(() {
                   // Werk de gebruikersdata bij met de waarden uit de tekstvelden
-                  widget.user['name'] = _nameController.text;
-                  widget.user['email'] = _emailController.text;
+                  widget.user['name'] = name;
+                  widget.user['email'] = email;
                 });
                 Navigator.of(context)
                     .pop(); // Sluit het dialoogvenster na het opslaan

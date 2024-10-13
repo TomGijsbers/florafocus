@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
+import '../api/api_service.dart';
 import '/widgets/statistics_header.dart';
 
-class StatisticsPage extends StatelessWidget {
+class StatisticsPage extends StatefulWidget {
   final Map<String, dynamic> user;
 
   StatisticsPage({required this.user});
 
   @override
-  Widget build(BuildContext context) {
-    List<dynamic> scannedSeeds = user['scanned_seeds'];
+  _StatisticsPageState createState() => _StatisticsPageState();
+}
 
+class _StatisticsPageState extends State<StatisticsPage> {
+  List<dynamic> productSkucodes = [];
+  final ApiService apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  void _fetchUserData() async {
+    Map<String, dynamic>? user =
+        await apiService.fetchUserDataByName(widget.user['name']);
+    if (user != null) {
+      setState(() {
+        productSkucodes = user['productSkucodes'] ?? [];
+      });
+      print(
+          'User data updated: ${user['name']}, Product SKU Codes: $productSkucodes'); // Debug print
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -24,14 +49,14 @@ class StatisticsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StatisticsHeader(
-              text: "Hier zijn je statistieken van de gescande zaadjes.",
+              text: "Hier zijn je statistieken van de gescande producten.",
             ),
             SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: scannedSeeds.length,
+                itemCount: productSkucodes.length,
                 itemBuilder: (context, index) {
-                  var seed = scannedSeeds[index];
+                  var skuCode = productSkucodes[index];
 
                   return Card(
                     color: Colors.green[100],
@@ -42,16 +67,9 @@ class StatisticsPage extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 10),
                     child: ListTile(
                       title: Text(
-                        seed['seed_name'],
+                        skuCode,
                         style: TextStyle(
                           color: Colors.green[800],
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                      subtitle: Text(
-                        "Fruit: ${seed['fruit_name']}\nSKU: ${seed['sku_code']}",
-                        style: TextStyle(
-                          color: Colors.green[600],
                           fontFamily: 'Roboto',
                         ),
                       ),

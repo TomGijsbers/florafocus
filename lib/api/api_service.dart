@@ -100,4 +100,33 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
+
+  // Functie om gebruikersdata op te halen op basis van naam
+  Future<Map<String, dynamic>?> fetchUserDataByName(String name) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/all'));
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> users =
+            List<Map<String, dynamic>>.from(json.decode(response.body));
+        print('Fetched users: $users'); // Debug print to check fetched users
+        // Zoek de gebruiker met de overeenkomende naam
+        Map<String, dynamic>? user = users.firstWhere(
+          (user) => user['name'] == name,
+          orElse: () => {},
+        );
+        if (user.isNotEmpty) {
+          return user;
+        } else {
+          print('User not found'); // Debug print
+          return null;
+        }
+      } else {
+        print('Failed to fetch users: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    }
+  }
 }
