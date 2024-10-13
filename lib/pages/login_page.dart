@@ -38,10 +38,24 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  bool _isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email);
+  }
+
   void _createAccount() async {
     String email = newEmailController.text;
     String name = newNameController.text;
     String password = newPasswordController.text;
+
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ongeldig e-mailadres.')),
+      );
+      return;
+    }
 
     var response = await http.post(
       Uri.parse('http://10.0.2.2:8083/api/user'), // Updated URL
