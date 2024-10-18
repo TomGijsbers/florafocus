@@ -1,40 +1,28 @@
+import 'product.dart';
+
 class User {
-  final String firstName;
-  final String lastName;
+  final String name;
+  final String email;
+  final String password;
   final List<ScannedSeed> scannedSeeds;
 
   User(
-      {required this.firstName,
-      required this.lastName,
+      {required this.name,
+      required this.email,
+      required this.password,
       required this.scannedSeeds});
 
   // fromJson constructor om de data om te zetten
   factory User.fromJson(Map<String, dynamic> json) {
-    var seedsFromJson = json['scannedSeeds'] as List;
+    var seedsFromJson = json['productSkucodes'] as List;
     List<ScannedSeed> seedList =
         seedsFromJson.map((seed) => ScannedSeed.fromJson(seed)).toList();
 
     return User(
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      name: json['name'],
+      email: json['email'],
+      password: json['password'],
       scannedSeeds: seedList,
-    );
-  }
-}
-
-class ScannedSeed {
-  final String seedName;
-  final String fruitName;
-  final String skuCode;
-
-  ScannedSeed(
-      {required this.seedName, required this.fruitName, required this.skuCode});
-
-  factory ScannedSeed.fromJson(Map<String, dynamic> json) {
-    return ScannedSeed(
-      seedName: json['seedName'],
-      fruitName: json['fruitName'],
-      skuCode: json['skuCode'],
     );
   }
 }

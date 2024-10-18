@@ -4,15 +4,13 @@ import 'package:http/http.dart'
 
 class ApiService {
   static const String baseUrl =
-      'http://docker.taile0d53a.ts.net:8083/api/user'; // De basis-URL van de API
-  static const String productUrl =
-      'http://docker.taile0d53a.ts.net:8080/api/product/all'; // De URL voor producten
+      'http://docker.taile0d53a.ts.net:8084'; // De basis-URL van de API
 
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {
     try {
-      final response = await http.get(
-          Uri.parse('$baseUrl/all')); // Haal gebruikersgegevens op van de API
+      final response = await http.get(Uri.parse(
+          '$baseUrl/users/all')); // Haal gebruikersgegevens op van de API
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(
@@ -36,7 +34,7 @@ class ApiService {
   // Functie om een gebruiker te authentiseren en de gebruikersdata terug te geven
   Future<Map<String, dynamic>?> loginUser(String email, String password) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl?email=$email'));
+      final response = await http.get(Uri.parse('$baseUrl/users?email=$email'));
 
       if (response.statusCode == 200) {
         List<dynamic> users = json.decode(response.body);
@@ -66,7 +64,8 @@ class ApiService {
 
   Future<List<Map<String, dynamic>>> fetchUserProducts(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$userId/products'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/users/$userId/products'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -85,7 +84,7 @@ class ApiService {
   // Functie om producten op te halen
   Future<List<Map<String, dynamic>>> fetchProducts() async {
     try {
-      final response = await http.get(Uri.parse(productUrl));
+      final response = await http.get(Uri.parse("$baseUrl/products/all"));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
