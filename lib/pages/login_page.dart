@@ -71,22 +71,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account succesvol aangemaakt.')),
+        const SnackBar(content: Text('Account succesvol aangemaakt. Log in om verder te gaan.')),
       );
-      try {
-        Map<String, dynamic> user = jsonDecode(response.body);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)),
-        );
-      } catch (e) {
-        print('Error decoding server response: $e');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(user: {'name': name})),
-        );
-      }
+      Navigator.of(context).pop(); // Close the create account dialog
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Account aanmaken mislukt.')),
