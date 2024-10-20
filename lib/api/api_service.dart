@@ -5,7 +5,6 @@ import 'package:http/http.dart'
 class ApiService {
   static const String baseUrl =
       'http://docker.taile0d53a.ts.net:8084'; // De basis-URL van de API
-
   // Functie om gebruikers voor de leaderboard op te halen
   Future<List<Map<String, dynamic>>> fetchUsers() async {
     try {
@@ -97,6 +96,24 @@ class ApiService {
     } catch (e) {
       print('Error: $e');
       throw Exception('Failed to load products');
+    }
+  }
+  // Method to fetch a single product by SKU
+  Future<List<Map<String, dynamic>>> fetchProductBySku(String sku) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(data);
+      } else {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to load product');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load product');
     }
   }
 

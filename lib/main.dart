@@ -6,6 +6,7 @@ import 'pages/profile_page.dart';
 import 'pages/stats_page.dart';
 import 'pages/leaderboard_page.dart';
 import 'pages/products_page.dart'; // Importeer de ProductsPage
+import 'pages/image_target_page.dart'; // Importeer de ImageTargetPage
 
 // Hoofdfunctie om de app te starten
 void main() {
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
             LeaderboardPage(), // Verwijs naar de LeaderboardPage
         '/products': (context) =>
             ProductsPage(), // Verwijs naar de ProductsPage
+        '/image_target': (context) =>
+            ImageTargetPage(), // Verwijs naar de ImageTargetPage
       },
       // Dynamisch routes genereren
       onGenerateRoute: (settings) {

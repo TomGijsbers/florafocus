@@ -5,13 +5,13 @@ import '../widgets/grid_item.dart'; // Importeer de GridItem widget
 class HomePage extends StatelessWidget {
   final Map<String, dynamic> user; // Gebruikersdata
 
-  HomePage({required this.user}); // Constructor met verplichte gebruikersdata
+  const HomePage({super.key, required this.user}); // Constructor met verplichte gebruikersdata
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welkom bij de FloraFocus",
+        title: const Text("Welkom bij de FloraFocus",
             style: TextStyle(fontFamily: 'Roboto')), // Titel van de app
         centerTitle: true, // Centreer de titel
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
               CrossAxisAlignment.start, // Inhoud uitlijnen aan de linkerkant
           children: [
             Container(
-              padding: EdgeInsets.all(16), // Padding binnen de container
+              padding: const EdgeInsets.all(16), // Padding binnen de container
               decoration: BoxDecoration(
                 color: Colors.green[50], // Achtergrondkleur van de container
                 borderRadius: BorderRadius.circular(10), // Ronde hoeken
@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20), // Ruimte onder de welkomsttekst
+            const SizedBox(height: 20), // Ruimte onder de welkomsttekst
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2, // Twee kolommen
@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: CameraButton(
         onPressed: () {
-          // Voeg hier de functie toe om de camera te openen of een object te scannen
+          Navigator.pushNamed(context, '/image_target', arguments: user);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation

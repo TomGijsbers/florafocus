@@ -4,11 +4,13 @@ import '../api/api_service.dart'; // Importeer de ApiService
 class ProductsPage extends StatelessWidget {
   final ApiService apiService = ApiService();
 
+  ProductsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Producten",
           style: TextStyle(
             fontFamily: 'Montserrat',
@@ -21,11 +23,11 @@ class ProductsPage extends StatelessWidget {
         future: apiService.fetchProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Geen producten gevonden'));
+            return const Center(child: Text('Geen producten gevonden'));
           } else {
             final products = snapshot.data!;
             return ListView.builder(
@@ -33,13 +35,13 @@ class ProductsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(15),
+                    contentPadding: const EdgeInsets.all(15),
                     title: Text(
                       product['name'],
                       style: TextStyle(

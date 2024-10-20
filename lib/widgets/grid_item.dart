@@ -34,10 +34,10 @@ class GridItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50, color: Colors.white),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
                 fontFamily: 'Montserrat',
