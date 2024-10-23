@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
 import '../api/api_service.dart'; // Importeer de ApiService
@@ -9,11 +8,11 @@ import '../api/api_service.dart'; // Importeer de ApiService
 class ProfilePage extends StatefulWidget {
   final Map<String, dynamic> user; // Gebruikersdata in de vorm van een map
 
-  ProfilePage(
-      {required this.user}); // Constructor die de gebruikersdata vereist
+  const ProfilePage(
+      {super.key, required this.user}); // Constructor die de gebruikersdata vereist
 
   @override
-  _ProfilePageState createState() =>
+  State<StatefulWidget> createState() =>
       _ProfilePageState(); // Creëer de state voor de ProfilePage
 }
 
@@ -103,8 +102,8 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Bewerk Profiel'), // Titel van het dialoogvenster
-          content: Container(
+          title: const Text('Bewerk Profiel'), // Titel van het dialoogvenster
+          content: SizedBox(
             width: double.maxFinite, // Zorg dat de container maximaal breed is
             child: Column(
               mainAxisSize: MainAxisSize.min, // Minimale hoogte van de kolom
@@ -122,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Colors.grey[200], // Achtergrondkleur van het tekstveld
                   ),
                 ),
-                SizedBox(height: 10), // Ruimte tussen de tekstvelden
+                const SizedBox(height: 10), // Ruimte tussen de tekstvelden
                 TextField(
                   controller:
                       _emailController, // Controller voor het emailadres
@@ -145,11 +144,11 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context)
                     .pop(); // Sluit het dialoogvenster zonder wijzigingen
-              },
-              child: Text('Annuleren'), // Knop om te annuleren
+              }, // Knop om te annuleren
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red, // Kleuring van de knop
               ),
+              child: const Text('Annuleren'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -164,11 +163,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
                 Navigator.of(context)
                     .pop(); // Sluit het dialoogvenster na het opslaan
-              },
-              child: Text('Opslaan'), // Knop om wijzigingen op te slaan
+              }, // Knop om wijzigingen op te slaan
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.green[700], // Kleuring van de knop
               ),
+              child: const Text('Opslaan'),
             ),
           ],
         );
@@ -181,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Bouw de gebruikersinterface van de profielpagina
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profiel',
+        title: const Text('Profiel',
             style: TextStyle(
                 fontFamily: 'Montserrat')), // Titel van de app met Montserrat
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
@@ -194,18 +193,18 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment:
                   CrossAxisAlignment.center, // Centreer de inhoud
               children: [
-                SizedBox(height: 20), // Ruimte boven de header
+                const SizedBox(height: 20), // Ruimte boven de header
                 ProfileHeader(
                     userName:
                         _nameController.text), // Toon profielheader met naam
-                SizedBox(height: 20), // Ruimte onder de header
+                const SizedBox(height: 20), // Ruimte onder de header
                 EditProfileButton(
                   onPressed: () {
                     _showEditProfileModal(
                         context); // Toon het bewerk profiel dialoogvenster
                   },
                 ),
-                SizedBox(height: 20), // Ruimte onder de knop
+                const SizedBox(height: 20), // Ruimte onder de knop
                 Text(
                   "Email: ${_emailController.text}", // Toon het emailadres
                   style: TextStyle(
@@ -214,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontFamily: 'Roboto', // Tekstfont
                   ),
                 ),
-                SizedBox(height: 10), // Ruimte onder het emailadres
+                const SizedBox(height: 10), // Ruimte onder het emailadres
                 Text(
                   "Aantal producten: $_productCount", // Toon het aantal producten
                   style: TextStyle(

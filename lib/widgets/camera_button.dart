@@ -12,7 +12,7 @@ class CameraButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed, // Voer de callback uit wanneer de knop wordt ingedrukt
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             horizontal: 20, vertical: 10), // Padding voor de knop
         decoration: BoxDecoration(
           color: Colors.green[600], // Achtergrondkleur van de knop
@@ -26,7 +26,7 @@ class CameraButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child: const Row(
           mainAxisSize: MainAxisSize
               .min, // Zorg ervoor dat de rij niet groter wordt dan de inhoud
           children: [
