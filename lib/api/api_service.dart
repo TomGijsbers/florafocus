@@ -98,10 +98,12 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
+
   // Method to fetch a single product by SKU
   Future<List<Map<String, dynamic>>> fetchProductBySku(String sku) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -117,32 +119,26 @@ class ApiService {
     }
   }
 
-  // Functie om gebruikersdata op te halen op basis van naam
-  Future<Map<String, dynamic>?> fetchUserDataByName(String name) async {
+  // Functie om gebruikersdata op te halen op basis van ID
+  Future<Map<String, dynamic>?> fetchUserDataById(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/all'));
+      final response = await http.get(Uri.parse(
+          '$baseUrl/users/$userId')); // Haal gebruikersgegevens op van de API
       if (response.statusCode == 200) {
-        List<Map<String, dynamic>> users =
-            List<Map<String, dynamic>>.from(json.decode(response.body));
-        print('Fetched users: $users'); // Debug print to check fetched users
-        // Zoek de gebruiker met de overeenkomende naam
-        Map<String, dynamic>? user = users.firstWhere(
-          (user) => user['name'] == name,
-          orElse: () => {},
-        );
-        if (user.isNotEmpty) {
-          return user;
-        } else {
-          print('User not found'); // Debug print
-          return null;
-        }
+        Map<String, dynamic> user = json
+            .decode(response.body); // Converteer de JSON response naar een map
+        print(
+            'Fetched user: $user'); // Debug print om opgehaalde gebruiker te controleren
+        return user; // Retourneer de gebruikersgegevens
       } else {
-        print('Failed to fetch users: ${response.statusCode}');
-        return null;
+        print(
+            'Failed to fetch user: ${response.statusCode}'); // Als de statuscode niet 200 is, geef een foutmelding
+        return null; // Retourneer null als de gegevens niet succesvol zijn opgehaald
       }
     } catch (e) {
-      print('Error fetching user data: $e');
-      return null;
+      print(
+          'Error fetching user data: $e'); // Foutmelding indien er een uitzondering optreedt
+      return null; // Retourneer null bij een fout
     }
   }
 }
