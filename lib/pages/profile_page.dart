@@ -102,16 +102,16 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Bewerk Profiel'),
+          title: const Text('Bewerk Profiel'), // Titel van het dialoogvenster
           content: SizedBox(
-            width: double.maxFinite,
+            width: double.maxFinite, // Titel van het dialoogvenster
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  controller: _nameController,
+                  controller: _nameController, // Controller voor de naam
                   decoration: InputDecoration(
-                    labelText: 'Naam',
+                    labelText: 'Naam', // Label voor het tekstveld
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -119,16 +119,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     fillColor: Colors.grey[200],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 10), // Ruimte tussen de tekstvelden
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Email', // Label voor het tekstveld
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
+                    filled: true, // Vul het tekstveld
+                    fillColor:
+                        Colors.grey[200], // Achtergrondkleur van het tekstveld
                   ),
                 ),
               ],
@@ -149,20 +150,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 final userId = widget.user['id'];
                 final name = _nameController.text;
                 final email = _emailController.text;
-                final success =
-                    await apiService.updateUserData(userId, name, email);
+                final success = await apiService.updateUserData(userId, name,
+                    email); // Werk de gebruikersdata bij met de waarden uit de tekstvelden
                 if (success) {
                   setState(() {
                     widget.user['name'] = name;
                     widget.user['email'] = email;
                   });
-                  Navigator.of(context).pop();
+                  Navigator.of(context)
+                      .pop(); // Sluit het dialoogvenster na het opslaan
                 } else {
                   // Handle error
                 }
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.green[700],
+                foregroundColor: Colors.green[700], // Kleuring van de knop
               ),
               child: const Text('Opslaan'),
             ),

@@ -98,10 +98,12 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
+
   // Method to fetch a single product by SKU
   Future<List<Map<String, dynamic>>> fetchProductBySku(String sku) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -118,31 +120,53 @@ class ApiService {
   }
 
   // Functie om gebruikersdata op te halen op basis van naam
-  Future<Map<String, dynamic>?> fetchUserDataByName(String name) async {
+  // Future<Map<String, dynamic>?> fetchUserDataByName(String name) async {
+  //   try {
+  //     final response = await http.get(Uri.parse('$baseUrl/all'));
+  //     if (response.statusCode == 200) {
+  //       List<Map<String, dynamic>> users =
+  //           List<Map<String, dynamic>>.from(json.decode(response.body));
+  //       print('Fetched users: $users'); // Debug print to check fetched users
+  //       // Zoek de gebruiker met de overeenkomende naam
+  //       Map<String, dynamic>? user = users.firstWhere(
+  //         (user) => user['name'] == name,
+  //         orElse: () => {},
+  //       );
+  //       if (user.isNotEmpty) {
+  //         return user;
+  //       } else {
+  //         print('User not found'); // Debug print
+  //         return null;
+  //       }
+  //     } else {
+  //       print('Failed to fetch users: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching user data: $e');
+  //     return null;
+  //   }
+  // }
+
+// Functie om gebruikersdata bij te werken
+  Future<bool> updateUserData(int userId, String name, String email) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/all'));
-      if (response.statusCode == 200) {
-        List<Map<String, dynamic>> users =
-            List<Map<String, dynamic>>.from(json.decode(response.body));
-        print('Fetched users: $users'); // Debug print to check fetched users
-        // Zoek de gebruiker met de overeenkomende naam
-        Map<String, dynamic>? user = users.firstWhere(
-          (user) => user['name'] == name,
-          orElse: () => {},
-        );
-        if (user.isNotEmpty) {
-          return user;
-        } else {
-          print('User not found'); // Debug print
-          return null;
-        }
-      } else {
-        print('Failed to fetch users: ${response.statusCode}');
-        return null;
-      }
+      final response = await http.put(
+        Uri.parse('$baseUrl/user/$userId'), // Stuur een PUT verzoek naar de API
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'name': name,
+          'email': email,
+        }),
+      );
+
+      return response.statusCode ==
+          200; // Retourneer true als de update succesvol was
     } catch (e) {
-      print('Error fetching user data: $e');
-      return null;
+      print('Error updating user data: $e');
+      return false; // Retourneer false bij een fout
     }
   }
 }
