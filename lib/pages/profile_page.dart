@@ -9,7 +9,8 @@ class ProfilePage extends StatefulWidget {
   final Map<String, dynamic> user; // Gebruikersdata in de vorm van een map
 
   const ProfilePage(
-      {super.key, required this.user}); // Constructor die de gebruikersdata vereist
+      {super.key,
+      required this.user}); // Constructor die de gebruikersdata vereist
 
   @override
   State<StatefulWidget> createState() =>
@@ -76,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _updateUserData(int userId, String name, String email) async {
     try {
       final response = await http.put(
-        Uri.parse('http://docker.taile0d53a.ts.net:8084/users/$userId'),
+        Uri.parse('http://docker.taile0d53a.ts.net:8084/user/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -97,39 +98,34 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showEditProfileModal(BuildContext context) {
-    // Functie om het bewerk profiel dialoogvenster te tonen
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Bewerk Profiel'), // Titel van het dialoogvenster
           content: SizedBox(
-            width: double.maxFinite, // Zorg dat de container maximaal breed is
+            width: double.maxFinite, // Titel van het dialoogvenster
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Minimale hoogte van de kolom
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: _nameController, // Controller voor de naam
                   decoration: InputDecoration(
                     labelText: 'Naam', // Label voor het tekstveld
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          10), // Hoeken van de rand afronden
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    filled: true, // Vul het tekstveld
-                    fillColor:
-                        Colors.grey[200], // Achtergrondkleur van het tekstveld
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
                 ),
                 const SizedBox(height: 10), // Ruimte tussen de tekstvelden
                 TextField(
-                  controller:
-                      _emailController, // Controller voor het emailadres
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email', // Label voor het tekstveld
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          10), // Hoeken van de rand afronden
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     filled: true, // Vul het tekstveld
                     fillColor:
@@ -142,11 +138,10 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(); // Sluit het dialoogvenster zonder wijzigingen
-              }, // Knop om te annuleren
+                Navigator.of(context).pop();
+              },
               style: TextButton.styleFrom(
-                foregroundColor: Colors.red, // Kleuring van de knop
+                foregroundColor: Colors.red,
               ),
               child: const Text('Annuleren'),
             ),
@@ -155,15 +150,19 @@ class _ProfilePageState extends State<ProfilePage> {
                 final userId = widget.user['id'];
                 final name = _nameController.text;
                 final email = _emailController.text;
-                await _updateUserData(userId, name, email);
-                setState(() {
-                  // Werk de gebruikersdata bij met de waarden uit de tekstvelden
-                  widget.user['name'] = name;
-                  widget.user['email'] = email;
-                });
-                Navigator.of(context)
-                    .pop(); // Sluit het dialoogvenster na het opslaan
-              }, // Knop om wijzigingen op te slaan
+                final success = await apiService.updateUserData(userId, name,
+                    email); // Werk de gebruikersdata bij met de waarden uit de tekstvelden
+                if (success) {
+                  setState(() {
+                    widget.user['name'] = name;
+                    widget.user['email'] = email;
+                  });
+                  Navigator.of(context)
+                      .pop(); // Sluit het dialoogvenster na het opslaan
+                } else {
+                  // Handle error
+                }
+              },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.green[700], // Kleuring van de knop
               ),
