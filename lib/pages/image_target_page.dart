@@ -10,11 +10,13 @@ class ImageTargetPage extends StatefulWidget {
 }
 
 class _ImageTargetScreenState extends State<ImageTargetPage> {
-  static final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   UnityWidgetController? _unityWidgetController;
   final ApiService apiService = ApiService(); // Initialize the ApiService
   List<Map<String, dynamic>>? _products; // State variable to hold products
+  bool _isPlaying = false; // State variable to track play state
 
   @override
   void initState() {
@@ -50,48 +52,58 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
             child: _products == null
                 ? const Center(child: CircularProgressIndicator())
                 : _products!.isEmpty
-                ? const Center(child: Text('Geen producten gevonden'))
-                : ListView.builder(
-              itemCount: _products!.length,
-              itemBuilder: (context, index) {
-                final product = _products![index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      product['name'],
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.green[900],
+                    ? const Center(child: Text('Geen producten gevonden'))
+                    : ListView.builder(
+                        itemCount: _products!.length,
+                        itemBuilder: (context, index) {
+                          final product = _products![index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  contentPadding: const EdgeInsets.all(15),
+                                  title: Text(
+                                    product['name'],
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.green[900],
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    'Category: ${product['category']}\nPrice: \$${product['price']}',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14,
+                                      color: Colors.green[700],
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    'SKU: ${product['skuCode']}',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 12,
+                                      color: Colors.green[500],
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () =>
+                                      _togglePlay(product['skuCode']),
+                                  child: Text(_isPlaying ? 'Stop' : 'Play'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    subtitle: Text(
-                      'Category: ${product['category']}\nPrice: \$${product['price']}',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
-                        color: Colors.green[700],
-                      ),
-                    ),
-                    trailing: Text(
-                      'SKU: ${product['skuCode']}',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 12,
-                        color: Colors.green[500],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -100,15 +112,13 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
 
   void onUnityMessage(message) {
     print('Received message from unity: ${message.toString()}');
-    if (message.toString().contains('Cucumber recognized by Vuforia')) {
-      _showImageScannedDialog();
-      _fetchProducts(); // Call the API when the condition is met
-    }
+    _isPlaying = false; // Reset the play state
+    _fetchProducts(message); // Call the API when the condition is met
   }
 
-  void _fetchProducts() async {
+  void _fetchProducts(message) async {
     try {
-      final products = await apiService.fetchProductBySku('APPLE001');
+      final products = await apiService.fetchProductBySku(message);
       setState(() {
         _products = products; // Update the state with the fetched products
       });
@@ -150,5 +160,27 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
         );
       },
     );
+  }
+
+  void _togglePlay(message) {
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
+
+    if (_unityWidgetController != null) {
+      if (message == 'APPLE001') {
+        _unityWidgetController!.postMessage(
+          'APPLE001',
+          'OnFlutterMessageReceived',
+          _isPlaying ? 'Play' : 'Stop',
+        );
+      } else if (message == 'PEAR001') {
+        _unityWidgetController!.postMessage(
+          'PEAR001',
+          'OnFlutterMessageReceived',
+          _isPlaying ? 'Play' : 'Stop',
+        );
+      }
+    }
   }
 }
