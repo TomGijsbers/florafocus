@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
 class ImageTargetPage extends StatefulWidget {
-  const ImageTargetPage({Key? key}) : super(key: key);
+  final Map<String, dynamic> user; // Gebruikersdata
+  const ImageTargetPage({super.key, required this.user});
 
   @override
   State<ImageTargetPage> createState() => _ImageTargetScreenState();
@@ -114,16 +115,26 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
     print('Received message from unity: ${message.toString()}');
     _isPlaying = false; // Reset the play state
     _fetchProducts(message); // Call the API when the condition is met
+    _addProductToUserBySku(message); // Call the API when the condition is met
   }
 
   void _fetchProducts(message) async {
     try {
-      final products = await apiService.fetchProductBySku(message);
+      final products = await apiService.getProductBySku(message);
       setState(() {
         _products = products; // Update the state with the fetched products
       });
     } catch (error) {
       print('Error fetching products: $error');
+      // Handle the error appropriately
+    }
+  }
+
+  void _addProductToUserBySku(String sku) async {
+    try {
+      await apiService.addProductToUserBySku(sku, widget.user['id']);
+    } catch (error) {
+      print('Error adding product to user: $error');
       // Handle the error appropriately
     }
   }

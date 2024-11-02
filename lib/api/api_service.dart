@@ -100,7 +100,7 @@ class ApiService {
   }
 
   // Method to fetch a single product by SKU
-  Future<List<Map<String, dynamic>>> fetchProductBySku(String sku) async {
+  Future<List<Map<String, dynamic>>> getProductBySku(String sku) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
@@ -116,6 +116,22 @@ class ApiService {
     } catch (e) {
       print('Error: $e');
       throw Exception('Failed to load product');
+    }
+  }
+
+// Method to add a single product to a user by SKU
+  Future<void> addProductToUserBySku(String sku, int id) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/users/$id/products/$sku'),
+      );
+      if (response.statusCode == 400) {
+        print('Product already scanned');
+        throw Exception('Product already scanned');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to add product');
     }
   }
 

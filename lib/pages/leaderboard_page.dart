@@ -3,6 +3,8 @@ import '../api/api_service.dart';
 import '../widgets/leaderboard_item.dart'; // Importeer de LeaderboardItem widget
 
 class LeaderboardPage extends StatefulWidget {
+  const LeaderboardPage({super.key});
+
   @override
   _LeaderboardPageState createState() => _LeaderboardPageState();
 }
@@ -50,7 +52,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Klassement", // Titel van de pagina
           style:
               TextStyle(fontFamily: 'Roboto'), // Gebruik Roboto voor de titel
@@ -63,7 +65,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           ? Center(
               child: Text(
                 _errorMessage, // Toon de foutboodschap
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.red,
                   fontFamily: 'Montserrat',
