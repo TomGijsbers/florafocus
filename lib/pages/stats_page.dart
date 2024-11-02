@@ -5,7 +5,7 @@ import '/widgets/statistics_header.dart';
 class StatisticsPage extends StatefulWidget {
   final Map<String, dynamic> user;
 
-  StatisticsPage({required this.user});
+  const StatisticsPage({super.key, required this.user});
 
   @override
   _StatisticsPageState createState() => _StatisticsPageState();
@@ -13,9 +13,9 @@ class StatisticsPage extends StatefulWidget {
 
 class _StatisticsPageState extends State<StatisticsPage> {
   List<dynamic> productSkucodes =
-      []; // Lijst om SKU-codes van producten op te slaan
+  []; // Lijst om SKU-codes van producten op te slaan
   final ApiService apiService =
-      ApiService(); // Instantieer ApiService voor API-aanroepen
+  ApiService(); // Instantieer ApiService voor API-aanroepen
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Statistieken',
           style: TextStyle(fontFamily: 'Roboto'),
         ),
@@ -53,11 +53,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StatisticsHeader(
+            const StatisticsHeader(
               text:
-                  "Hier zijn je statistieken van de gescande producten.", // Toon de statistieken header
+              "Hier zijn je statistieken van de gescande producten.", // Toon de statistieken header
             ),
-            SizedBox(height: 20), // Ruimte tussen de header en de lijst
+            const SizedBox(height: 20), // Ruimte tussen de header en de lijst
             Expanded(
               child: ListView.builder(
                 itemCount: productSkucodes.length, // Aantal items in de lijst
@@ -65,14 +65,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   var skuCode = productSkucodes[index]; // Haal de SKU-code op
 
                   return Card(
-                    color: Colors.green[100], // Achtergrondkleur van de kaart
-                    elevation: 4, // Hoogte-effect voor de kaart
+                    color: Colors.green[100],
+                    // Achtergrondkleur van de kaart
+                    elevation: 4,
+                    // Hoogte-effect voor de kaart
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(12), // Afronden van de hoeken
+                      BorderRadius.circular(12), // Afronden van de hoeken
                     ),
-                    margin: EdgeInsets.symmetric(
-                        vertical: 10), // Ruimte tussen de kaarten
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    // Ruimte tussen de kaarten
                     child: ListTile(
                       title: Text(
                         skuCode, // Toon de SKU-code in de titel

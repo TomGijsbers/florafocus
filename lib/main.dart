@@ -21,17 +21,20 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // Verberg de debug banner
       initialRoute: '/', // Stel de initiële route in op de loginpagina
       routes: {
-        '/': (context) =>
-            LoginPage(), // Verwijs naar de LoginPage als de initiële route
+        '/': (context) => const LoginPage(),
+        // Verwijs naar de LoginPage als de initiële route
         '/profile': (context) => ProfilePage(
-            user: ModalRoute.of(context)!.settings.arguments as Map<String,
-                dynamic>), // Haal de gebruikersdata op uit de instellingen van de route
-        '/leaderboard': (context) =>
-            LeaderboardPage(), // Verwijs naar de LeaderboardPage
-        '/products': (context) =>
-            ProductsPage(), // Verwijs naar de ProductsPage
-        '/image_target': (context) =>
-            ImageTargetPage(), // Verwijs naar de ImageTargetPage
+            user: ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>),
+        // Haal de gebruikersdata op uit de instellingen van de route
+        '/leaderboard': (context) => LeaderboardPage(),
+        // Verwijs naar de LeaderboardPage
+        '/products': (context) => ProductsPage(),
+        // Verwijs naar de ProductsPage
+        '/image_target': (context) => ImageTargetPage(
+            user: ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>),
+        // Verwijs naar de ImageTargetPage
       },
       // Dynamisch routes genereren
       onGenerateRoute: (settings) {

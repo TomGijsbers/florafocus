@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -33,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login mislukt. Controleer uw inloggegevens.')),
+        const SnackBar(
+            content: Text('Login mislukt. Controleer uw inloggegevens.')),
       );
     }
   }
@@ -71,7 +74,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account succesvol aangemaakt. Log in om verder te gaan.')),
+        const SnackBar(
+            content: Text(
+                'Account succesvol aangemaakt. Log in om verder te gaan.')),
       );
       Navigator.of(context).pop(); // Close the create account dialog
     } else {
@@ -118,7 +123,8 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _createAccount,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[600],
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -187,7 +193,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[600],
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -204,7 +211,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _showCreateAccountDialog,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[600],
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
