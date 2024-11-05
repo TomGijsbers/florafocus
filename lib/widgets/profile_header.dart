@@ -25,7 +25,7 @@ class ProfileHeader extends StatelessWidget {
                 'Montserrat', // Gebruik Montserrat voor de gebruikersnaam
           ), // Tekststijl
         ),
-        SizedBox(height: 10), // Ruimte onder de gebruikersnaam
+        const SizedBox(height: 10), // Ruimte onder de gebruikersnaam
       ],
     );
   }

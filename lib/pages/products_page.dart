@@ -1,3 +1,4 @@
+import 'package:florafocus/models/product.dart';
 import 'package:flutter/material.dart';
 import '../api/api_service.dart'; // Importeer de ApiService
 
@@ -13,13 +14,13 @@ class ProductsPage extends StatelessWidget {
         title: const Text(
           "Producten",
           style: TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         backgroundColor: Colors.green[700],
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      body: FutureBuilder<List<ScannedSeed>>(
         future: apiService.fetchProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,7 +36,8 @@ class ProductsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -43,7 +45,7 @@ class ProductsPage extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
                     title: Text(
-                      product['name'],
+                      product.name,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -52,7 +54,7 @@ class ProductsPage extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Category: ${product['category']}\nPrice: \$${product['price']}',
+                      'Category: ${product.categoryToString(product.category)}\nPrice: \$${product.price}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 14,
@@ -60,7 +62,7 @@ class ProductsPage extends StatelessWidget {
                       ),
                     ),
                     trailing: Text(
-                      'SKU: ${product['skuCode']}',
+                      'SKU: ${product.skuCode}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,

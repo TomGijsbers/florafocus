@@ -1,9 +1,10 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 import '../api/api_service.dart';
 import '/widgets/statistics_header.dart';
 
 class StatisticsPage extends StatefulWidget {
-  final Map<String, dynamic> user;
+  final User user;
 
   const StatisticsPage({super.key, required this.user});
 
@@ -13,9 +14,9 @@ class StatisticsPage extends StatefulWidget {
 
 class _StatisticsPageState extends State<StatisticsPage> {
   List<dynamic> productSkucodes =
-  []; // Lijst om SKU-codes van producten op te slaan
+      []; // Lijst om SKU-codes van producten op te slaan
   final ApiService apiService =
-  ApiService(); // Instantieer ApiService voor API-aanroepen
+      ApiService(); // Instantieer ApiService voor API-aanroepen
 
   @override
   void initState() {
@@ -25,16 +26,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   // Functie om gebruikersgegevens op te halen en de productSkucodes bij te werken
   void _fetchUserData() async {
-    int userId = widget.user['id']; // Haal de userId op uit de widget
-    Map<String, dynamic>? user = await apiService
+    int userId = widget.user.id; // Haal de userId op uit de widget
+    User? user = await apiService
         .fetchUserDataById(userId); // Haal gebruikersgegevens op via userId
     if (user != null) {
       setState(() {
-        productSkucodes = user['productSkucodes'] ??
-            []; // Update de productSkucodes, of een lege lijst als deze null is
+        productSkucodes = user
+            .scannedSeeds; // Update de productSkucodes, of een lege lijst als deze null is
       });
       print(
-          'User data updated: ${user['name']}, Product SKU Codes: $productSkucodes'); // Debug print om de bijgewerkte gegevens te controleren
+          'User data updated: ${user.name}, Product SKU Codes: $productSkucodes'); // Debug print om de bijgewerkte gegevens te controleren
     }
   }
 
@@ -42,10 +43,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Statistieken',
-          style: TextStyle(fontFamily: 'Roboto'),
-        ),
+        title: const Text('Statistieken',
+            style: TextStyle(fontFamily: 'Roboto', color: Colors.white)),
         backgroundColor: Colors.green[700],
       ),
       body: Padding(
@@ -55,7 +54,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           children: [
             const StatisticsHeader(
               text:
-              "Hier zijn je statistieken van de gescande producten.", // Toon de statistieken header
+                  "Hier zijn je statistieken van de gescande producten.", // Toon de statistieken header
             ),
             const SizedBox(height: 20), // Ruimte tussen de header en de lijst
             Expanded(
@@ -71,7 +70,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     // Hoogte-effect voor de kaart
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.circular(12), // Afronden van de hoeken
+                          BorderRadius.circular(12), // Afronden van de hoeken
                     ),
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     // Ruimte tussen de kaarten

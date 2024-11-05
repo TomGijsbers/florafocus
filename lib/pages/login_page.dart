@@ -1,8 +1,8 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 import '../widgets/login_text.dart';
 import '../api/api_service.dart';
 import 'home_page.dart';
-import '../pages/stats_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -27,7 +27,9 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text;
     String password = passwordController.text;
 
-    Map<String, dynamic>? user = await apiService.loginUser(email, password);
+    User? user = await apiService.loginUser(email, password);
+    if (!mounted) return;
+
     if (user != null) {
       Navigator.pushReplacement(
         context,
@@ -36,7 +38,8 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Login mislukt. Controleer uw inloggegevens.')),
+          content: Text('Login mislukt. Controleer uw inloggegevens.'),
+        ),
       );
     }
   }
@@ -61,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     var response = await http.post(
-      Uri.parse('http://docker.taile0d53a.ts.net:8083/api/user'), // Updated URL
+      Uri.parse('http://docker.taile0d53a.ts.net:8084/users'), // Updated URL
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -92,25 +95,27 @@ class _LoginPageState extends State<LoginPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Maak een nieuw account aan'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LoginTextField(
-                label: "Email",
-                controller: newEmailController,
-              ),
-              const SizedBox(height: 16),
-              LoginTextField(
-                label: "Naam",
-                controller: newNameController,
-              ),
-              const SizedBox(height: 16),
-              LoginTextField(
-                label: "Wachtwoord",
-                obscureText: true,
-                controller: newPasswordController,
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LoginTextField(
+                  label: "Email",
+                  controller: newEmailController,
+                ),
+                const SizedBox(height: 16),
+                LoginTextField(
+                  label: "Naam",
+                  controller: newNameController,
+                ),
+                const SizedBox(height: 16),
+                LoginTextField(
+                  label: "Wachtwoord",
+                  obscureText: true,
+                  controller: newPasswordController,
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -146,8 +151,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
-        backgroundColor: Colors.transparent,
+        title: const Text(
+          "Login",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green[600],
         elevation: 0,
       ),
       body: Container(
@@ -166,6 +174,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
                 const Text(
@@ -204,7 +213,10 @@ class _LoginPageState extends State<LoginPage> {
                       fontFamily: 'Roboto',
                     ),
                   ),
-                  child: const Text("Login"),
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -222,7 +234,10 @@ class _LoginPageState extends State<LoginPage> {
                       fontFamily: 'Roboto',
                     ),
                   ),
-                  child: const Text("Maak een nieuw account aan"),
+                  child: const Text(
+                    "Maak een nieuw account aan",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

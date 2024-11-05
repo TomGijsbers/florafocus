@@ -1,3 +1,4 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,7 +7,7 @@ import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
 import '../api/api_service.dart'; // Importeer de ApiService
 
 class ProfilePage extends StatefulWidget {
-  final Map<String, dynamic> user; // Gebruikersdata in de vorm van een map
+  final User user; // Gebruikersdata in de vorm van een map
 
   const ProfilePage(
       {super.key,
@@ -27,8 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState(); // Voer de initState van de superclass uit
     // Initialiseer de controllers met de huidige waarde van de gebruikersdata
-    _nameController = TextEditingController(text: widget.user['name']);
-    _emailController = TextEditingController(text: widget.user['email']);
+    _nameController = TextEditingController(text: widget.user.name);
+    _emailController = TextEditingController(text: widget.user.email);
     _fetchUserData(); // Haal de gebruikersdata op van de API
   }
 
@@ -50,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
         print('Fetched users: $users'); // Debug print to check fetched users
         // Zoek de gebruiker met de overeenkomende naam
         Map<String, dynamic>? user = users.firstWhere(
-          (user) => user['name'] == widget.user['name'],
+          (user) => user['name'] == widget.user.name,
           orElse: () => {},
         );
         if (user.isNotEmpty) {
@@ -147,18 +148,20 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final userId = widget.user['id'];
+                final userId = widget.user.id;
                 final name = _nameController.text;
                 final email = _emailController.text;
                 final success = await apiService.updateUserData(userId, name,
                     email); // Werk de gebruikersdata bij met de waarden uit de tekstvelden
                 if (success) {
                   setState(() {
-                    widget.user['name'] = name;
-                    widget.user['email'] = email;
+                    widget.user.name = name;
+                    widget.user.email = email;
                   });
-                  Navigator.of(context)
-                      .pop(); // Sluit het dialoogvenster na het opslaan
+                  if (mounted) {
+                    Navigator.of(context)
+                        .pop(); // Sluit het dialoogvenster na het opslaan
+                  }
                 } else {
                   // Handle error
                 }
@@ -181,7 +184,8 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profiel',
             style: TextStyle(
-                fontFamily: 'Montserrat')), // Titel van de app met Montserrat
+                fontFamily: 'Montserrat',
+                color: Colors.white)), // Titel van de app met Montserrat
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
       ),
       body: SingleChildScrollView(

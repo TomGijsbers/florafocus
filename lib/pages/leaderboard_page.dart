@@ -1,3 +1,4 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 import '../api/api_service.dart';
 import '../widgets/leaderboard_item.dart'; // Importeer de LeaderboardItem widget
@@ -12,8 +13,7 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   final ApiService _apiService =
       ApiService(); // Maak een instantie van de API-service
-  List<Map<String, dynamic>> _users =
-      []; // Lijst van gebruikers voor het klassement
+  List<User> _users = []; // Lijst van gebruikers voor het klassement
   String _errorMessage = ''; // Bericht om eventuele fouten weer te geven
 
   @override
@@ -26,15 +26,14 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   Future<void> _fetchUsers() async {
     try {
       // Haal de gebruikers op van de API
-      List<Map<String, dynamic>> users = await _apiService.fetchUsers();
+      List<User> users = await _apiService.fetchUsers();
 
-      // Voeg een 'scanned_count' toe voor elke gebruiker gebaseerd op het aantal gescande producten
       users.forEach((user) {
-        user['scanned_count'] = user['productSkucodes']?.length ?? 0;
+        user.scannedCount = user.scannedSeeds.length;
       });
 
       // Sorteer de gebruikers op basis van het aantal gescande producten, aflopend
-      users.sort((a, b) => b['scanned_count'].compareTo(a['scanned_count']));
+      users.sort((a, b) => b.scannedCount.compareTo(a.scannedCount));
 
       // Update de state met de gesorteerde gebruikers
       setState(() {
@@ -54,8 +53,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       appBar: AppBar(
         title: const Text(
           "Klassement", // Titel van de pagina
-          style:
-              TextStyle(fontFamily: 'Roboto'), // Gebruik Roboto voor de titel
+          style: TextStyle(
+              fontFamily: 'Roboto',
+              color: Colors.white), // Gebruik Roboto voor de titel
         ),
         backgroundColor: Colors.green[700], // Achtergrondkleur van de appbalk
         centerTitle: true, // Centreer de titel

@@ -1,18 +1,22 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 import '../widgets/camera_button.dart'; // Importeer de CameraButton widget
 import '../widgets/grid_item.dart'; // Importeer de GridItem widget
 
 class HomePage extends StatelessWidget {
-  final Map<String, dynamic> user; // Gebruikersdata
+  final User user; // Gebruikersdata
 
-  const HomePage({super.key, required this.user}); // Constructor met verplichte gebruikersdata
+  const HomePage(
+      {super.key,
+      required this.user}); // Constructor met verplichte gebruikersdata
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Welkom bij de FloraFocus",
-            style: TextStyle(fontFamily: 'Roboto')), // Titel van de app
+            style: TextStyle(
+                fontFamily: 'Roboto', color: Colors.white)), // Titel van de app
         centerTitle: true, // Centreer de titel
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
       ),
@@ -29,7 +33,7 @@ class HomePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), // Ronde hoeken
               ),
               child: Text(
-                "Hello ${user['name']}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
+                "Hallo ${user.name}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
                 style: TextStyle(
                   fontSize: 18, // Tekstgrootte
                   color: Colors.green[900], // Tekstkleur

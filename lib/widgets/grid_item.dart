@@ -1,3 +1,4 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 
 class GridItem extends StatelessWidget {
@@ -5,7 +6,7 @@ class GridItem extends StatelessWidget {
   final String label; // Label voor de grid item
   final String route; // Route voor navigatie bij het klikken
   final Color color; // Kleur van het icoon
-  final Map<String, dynamic> user; // Add user data
+  final User user; // Add user data
 
   GridItem({
     required this.icon,

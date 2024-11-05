@@ -1,7 +1,8 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardItem extends StatelessWidget {
-  final Map<String, dynamic> user; // Gebruikersinformatie
+  final User user; // Gebruikersinformatie
   final int rank; // De rang van de gebruiker in het klassement
 
   const LeaderboardItem({
@@ -36,7 +37,7 @@ class LeaderboardItem extends StatelessWidget {
                 Colors.green[700], // Achtergrondkleur van de cirkel
             child: Text(
               rank.toString(), // Rangnummer
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
               ),
@@ -48,7 +49,7 @@ class LeaderboardItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user['name'], // Naam van de gebruiker
+                user.name, // Naam van de gebruiker
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.green[900],
@@ -56,7 +57,7 @@ class LeaderboardItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Producten gescand: ${user['scanned_count']}', // Aantal gescande producten
+                'Producten gescand: ${user.scannedCount}', // Aantal gescande producten
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.green[700],

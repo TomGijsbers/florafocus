@@ -1,4 +1,6 @@
 import 'dart:convert'; // Importeer de JSON conversie bibliotheek
+import 'package:florafocus/models/product.dart';
+import 'package:florafocus/models/user.dart';
 import 'package:http/http.dart'
     as http; // Importeer de http package voor netwerkverzoeken
 
@@ -6,7 +8,7 @@ class ApiService {
   static const String baseUrl =
       'http://docker.taile0d53a.ts.net:8084'; // De basis-URL van de API
   // Functie om gebruikers voor de leaderboard op te halen
-  Future<List<Map<String, dynamic>>> fetchUsers() async {
+  Future<List<User>> fetchUsers() async {
     try {
       final response = await http.get(Uri.parse(
           '$baseUrl/users/all')); // Haal gebruikersgegevens op van de API
@@ -14,8 +16,9 @@ class ApiService {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(
             response.body); // Converteer de JSON response naar een lijst
-        return List<Map<String, dynamic>>.from(
-            data); // Retourneer de gebruikersgegevens als een lijst van mappen
+        return data
+            .map((item) => User.fromJson(item))
+            .toList(); // Retourneer de gebruikersgegevens als een lijst van mappen
       } else {
         print(
             'Response status: ${response.statusCode}'); // Toon de response code als er iets mis gaat
@@ -31,20 +34,22 @@ class ApiService {
   }
 
   // Functie om een gebruiker te authentiseren en de gebruikersdata terug te geven
-  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+  Future<User?> loginUser(String email, String password) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/users?email=$email'));
 
       if (response.statusCode == 200) {
         List<dynamic> users = json.decode(response.body);
         if (users.isNotEmpty) {
-          final user = users[0];
+          final user = users[0] as Map<String, dynamic>;
           if (user['password'] == password) {
+            User userObj = User.fromJson(user);
             // Haal de gescande zaadjes op
             final userId = user['id'];
             final products = await fetchUserProducts(userId);
-            user['scanned_seeds'] = products;
-            return user;
+            userObj.scannedSeeds =
+                products.map((product) => product.skuCode).toList();
+            return userObj;
           } else {
             print('Wachtwoord onjuist');
           }
@@ -61,14 +66,14 @@ class ApiService {
     return null;
   }
 
-  Future<List<Map<String, dynamic>>> fetchUserProducts(int userId) async {
+  Future<List<ScannedSeed>> fetchUserProducts(int userId) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/users/$userId/products'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return data.map((item) => ScannedSeed.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -81,13 +86,13 @@ class ApiService {
   }
 
   // Functie om producten op te halen
-  Future<List<Map<String, dynamic>>> fetchProducts() async {
+  Future<List<ScannedSeed>> fetchProducts() async {
     try {
       final response = await http.get(Uri.parse("$baseUrl/products/all"));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return data.map((item) => ScannedSeed.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -100,14 +105,14 @@ class ApiService {
   }
 
   // Method to fetch a single product by SKU
-  Future<List<Map<String, dynamic>>> getProductBySku(String sku) async {
+  Future<List<ScannedSeed>> getProductBySku(String sku) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return List<ScannedSeed>.from(data);
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -136,12 +141,12 @@ class ApiService {
   }
 
   // Functie om gebruikersdata op te halen op basis van ID
-  Future<Map<String, dynamic>?> fetchUserDataById(int userId) async {
+  Future<User?> fetchUserDataById(int userId) async {
     try {
       final response = await http.get(Uri.parse(
           '$baseUrl/users/$userId')); // Haal gebruikersgegevens op van de API
       if (response.statusCode == 200) {
-        Map<String, dynamic> user = json
+        User user = json
             .decode(response.body); // Converteer de JSON response naar een map
         print(
             'Fetched user: $user'); // Debug print om opgehaalde gebruiker te controleren
