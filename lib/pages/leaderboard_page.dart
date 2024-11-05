@@ -28,9 +28,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       // Haal de gebruikers op van de API
       List<User> users = await _apiService.fetchUsers();
 
-      users.forEach((user) {
-        user.scannedCount = user.scannedSeeds.length;
-      });
+      for (var user in users) {
+        user.scannedCount = user.scannedProducts.length;
+      }
 
       // Sorteer de gebruikers op basis van het aantal gescande producten, aflopend
       users.sort((a, b) => b.scannedCount.compareTo(a.scannedCount));

@@ -3,7 +3,7 @@ class User {
   String name;
   String email;
   final String password;
-  List<String> scannedSeeds;
+  List<String> scannedProducts;
   int scannedCount = 0;
 
   User(
@@ -11,7 +11,7 @@ class User {
       required this.name,
       required this.email,
       required this.password,
-      required this.scannedSeeds});
+      required this.scannedProducts});
 
   // fromJson constructor om de data om te zetten
   factory User.fromJson(Map<String, dynamic> json) {
@@ -20,7 +20,7 @@ class User {
       email: json['email'],
       password: json['password'],
       name: json['name'],
-      scannedSeeds: (json['productSkucodes'] as List<dynamic>?)
+      scannedProducts: (json['productSkucodes'] as List<dynamic>?)
               ?.map((item) => item as String)
               .toList() ??
           [],

@@ -32,7 +32,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     if (user != null) {
       setState(() {
         productSkucodes = user
-            .scannedSeeds; // Update de productSkucodes, of een lege lijst als deze null is
+            .scannedProducts; // Update de productSkucodes, of een lege lijst als deze null is
       });
       print(
           'User data updated: ${user.name}, Product SKU Codes: $productSkucodes'); // Debug print om de bijgewerkte gegevens te controleren

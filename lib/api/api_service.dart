@@ -47,7 +47,7 @@ class ApiService {
             // Haal de gescande zaadjes op
             final userId = user['id'];
             final products = await fetchUserProducts(userId);
-            userObj.scannedSeeds =
+            userObj.scannedProducts =
                 products.map((product) => product.skuCode).toList();
             return userObj;
           } else {
