@@ -19,7 +19,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
 
   UnityWidgetController? _unityWidgetController;
   final ApiService apiService = ApiService(); // Initialize the ApiService
-  List<ScannedSeed>? _products; // State variable to hold products
+  List<Product>? _products; // State variable to hold products
   bool _isPlaying = false; // State variable to track play state
 
   @override

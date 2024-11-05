@@ -1,19 +1,19 @@
 import 'category.dart';
 
-class ScannedSeed {
+class Product {
   final String name;
   final String skuCode;
   final double price;
   final Category category;
 
-  ScannedSeed(
+  Product(
       {required this.name,
       required this.skuCode,
       required this.price,
       required this.category});
 
-  factory ScannedSeed.fromJson(Map<String, dynamic> json) {
-    return ScannedSeed(
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
       name: json['name'],
       skuCode: json['skuCode'],
       price: (json['price'] as num).toDouble(),

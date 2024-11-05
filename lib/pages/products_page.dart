@@ -20,7 +20,7 @@ class ProductsPage extends StatelessWidget {
         ),
         backgroundColor: Colors.green[700],
       ),
-      body: FutureBuilder<List<ScannedSeed>>(
+      body: FutureBuilder<List<Product>>(
         future: apiService.fetchProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

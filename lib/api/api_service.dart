@@ -66,14 +66,14 @@ class ApiService {
     return null;
   }
 
-  Future<List<ScannedSeed>> fetchUserProducts(int userId) async {
+  Future<List<Product>> fetchUserProducts(int userId) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/users/$userId/products'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return data.map((item) => ScannedSeed.fromJson(item)).toList();
+        return data.map((item) => Product.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -86,13 +86,13 @@ class ApiService {
   }
 
   // Functie om producten op te halen
-  Future<List<ScannedSeed>> fetchProducts() async {
+  Future<List<Product>> fetchProducts() async {
     try {
       final response = await http.get(Uri.parse("$baseUrl/products/all"));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return data.map((item) => ScannedSeed.fromJson(item)).toList();
+        return data.map((item) => Product.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -105,14 +105,14 @@ class ApiService {
   }
 
   // Method to fetch a single product by SKU
-  Future<List<ScannedSeed>> getProductBySku(String sku) async {
+  Future<List<Product>> getProductBySku(String sku) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<ScannedSeed>.from(data);
+        return List<Product>.from(data);
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
