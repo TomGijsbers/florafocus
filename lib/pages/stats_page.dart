@@ -13,7 +13,7 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class _StatisticsPageState extends State<StatisticsPage> {
-  List<dynamic> productSkucodes =
+  List<String> productSkucodes =
       []; // Lijst om SKU-codes van producten op te slaan
   final ApiService apiService =
       ApiService(); // Instantieer ApiService voor API-aanroepen
@@ -21,22 +21,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   void initState() {
     super.initState();
-    _fetchUserData(); // Haal gebruikersgegevens op bij het initialiseren van de pagina
-  }
-
-  // Functie om gebruikersgegevens op te halen en de productSkucodes bij te werken
-  void _fetchUserData() async {
-    int userId = widget.user.id; // Haal de userId op uit de widget
-    User? user = await apiService
-        .fetchUserDataById(userId); // Haal gebruikersgegevens op via userId
-    if (user != null) {
-      setState(() {
-        productSkucodes = user
-            .scannedProducts; // Update de productSkucodes, of een lege lijst als deze null is
-      });
-      print(
-          'User data updated: ${user.name}, Product SKU Codes: $productSkucodes'); // Debug print om de bijgewerkte gegevens te controleren
-    }
+    apiService.fetchUserDataById(widget.user.id);
   }
 
   @override

@@ -28,8 +28,6 @@ class Product {
         return Category.VEGETABLE;
       case 'FRUIT':
         return Category.FRUIT;
-      case 'FLOWER':
-        return Category.FLOWER;
       default:
         throw Exception('Unknown category: $category');
     }

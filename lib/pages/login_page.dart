@@ -139,7 +139,10 @@ class _LoginPageState extends State<LoginPage> {
                   fontFamily: 'Roboto',
                 ),
               ),
-              child: const Text('Aanmaken'),
+              child: const Text(
+                'Aanmaken',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );

@@ -39,9 +39,8 @@ class ApiService {
       final response = await http.get(Uri.parse('$baseUrl/users?email=$email'));
 
       if (response.statusCode == 200) {
-        List<dynamic> users = json.decode(response.body);
-        if (users.isNotEmpty) {
-          final user = users[0] as Map<String, dynamic>;
+        Map<String, dynamic> user = json.decode(response.body);
+        if (user.isNotEmpty) {
           if (user['password'] == password) {
             User userObj = User.fromJson(user);
             // Haal de gescande zaadjes op
@@ -146,10 +145,12 @@ class ApiService {
       final response = await http.get(Uri.parse(
           '$baseUrl/users/$userId')); // Haal gebruikersgegevens op van de API
       if (response.statusCode == 200) {
-        User user = json
+        Map<String, dynamic> userMap = json
             .decode(response.body); // Converteer de JSON response naar een map
+        User user =
+            User.fromJson(userMap); // Converteer de map naar een User object
         print(
-            'Fetched user: $user'); // Debug print om opgehaalde gebruiker te controleren
+            'Fetched user: ${user.name}'); // Debug print om opgehaalde gebruiker te controleren
         return user; // Retourneer de gebruikersgegevens
       } else {
         print(
@@ -164,10 +165,11 @@ class ApiService {
   }
 
 // Functie om gebruikersdata bij te werken
-  Future<bool> updateUserData(int userId, String name, String email) async {
+  Future<void> updateUserData(int userId, String name, String email) async {
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/user/$userId'), // Stuur een PUT verzoek naar de API
+        Uri.parse(
+            '$baseUrl/users/$userId'), // Stuur een PUT verzoek naar de API
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -177,11 +179,13 @@ class ApiService {
         }),
       );
 
-      return response.statusCode ==
-          200; // Retourneer true als de update succesvol was
+      if (response.statusCode == 200) {
+        print('User data updated successfully');
+      } else {
+        print('Failed to update user data: ${response.statusCode}');
+      }
     } catch (e) {
       print('Error updating user data: $e');
-      return false; // Retourneer false bij een fout
     }
   }
 }

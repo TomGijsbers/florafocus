@@ -14,9 +14,9 @@ class LeaderboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: 8.0, horizontal: 16.0), // Buitenruimte rondom het item
-      padding: EdgeInsets.all(16.0), // Binnenruimte binnen het item
+      padding: const EdgeInsets.all(16.0), // Binnenruimte binnen het item
       decoration: BoxDecoration(
         color: Colors.green[50], // Achtergrondkleur van het item
         borderRadius: BorderRadius.circular(10), // Afgeronde hoeken
@@ -25,7 +25,7 @@ class LeaderboardItem extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5), // Schaduw rondom het item
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // Positie van de schaduw
+            offset: const Offset(0, 3), // Positie van de schaduw
           ),
         ],
       ),
@@ -43,7 +43,7 @@ class LeaderboardItem extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 16.0), // Ruimte tussen de cirkel en de tekst
+          const SizedBox(width: 16.0), // Ruimte tussen de cirkel en de tekst
           // Toon de naam van de gebruiker en het aantal gescande producten
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

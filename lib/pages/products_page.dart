@@ -54,7 +54,7 @@ class ProductsPage extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Category: ${product.categoryToString(product.category)}\nPrice: \$${product.price}',
+                      'Category: ${product.categoryToString(product.category)}\nPrice: €${product.price}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 14,

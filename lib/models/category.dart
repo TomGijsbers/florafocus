@@ -1,1 +1,1 @@
-enum Category { VEGETABLE, FRUIT, FLOWER }
+enum Category { VEGETABLE, FRUIT }
