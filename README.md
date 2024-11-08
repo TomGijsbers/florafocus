@@ -28,7 +28,7 @@ graph TD
     C --> E
     A --> F[(Backend Server)]
     style F fill:#f9f,stroke:#333,stroke-width:2px
-```
+````
 
 ## Functionaliteiten
 
