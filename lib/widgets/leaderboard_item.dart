@@ -1,7 +1,8 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardItem extends StatelessWidget {
-  final Map<String, dynamic> user; // Gebruikersinformatie
+  final User user; // Gebruikersinformatie
   final int rank; // De rang van de gebruiker in het klassement
 
   const LeaderboardItem({
@@ -13,9 +14,9 @@ class LeaderboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: 8.0, horizontal: 16.0), // Buitenruimte rondom het item
-      padding: EdgeInsets.all(16.0), // Binnenruimte binnen het item
+      padding: const EdgeInsets.all(16.0), // Binnenruimte binnen het item
       decoration: BoxDecoration(
         color: Colors.green[50], // Achtergrondkleur van het item
         borderRadius: BorderRadius.circular(10), // Afgeronde hoeken
@@ -24,7 +25,7 @@ class LeaderboardItem extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5), // Schaduw rondom het item
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // Positie van de schaduw
+            offset: const Offset(0, 3), // Positie van de schaduw
           ),
         ],
       ),
@@ -36,19 +37,19 @@ class LeaderboardItem extends StatelessWidget {
                 Colors.green[700], // Achtergrondkleur van de cirkel
             child: Text(
               rank.toString(), // Rangnummer
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
               ),
             ),
           ),
-          SizedBox(width: 16.0), // Ruimte tussen de cirkel en de tekst
+          const SizedBox(width: 16.0), // Ruimte tussen de cirkel en de tekst
           // Toon de naam van de gebruiker en het aantal gescande producten
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user['name'], // Naam van de gebruiker
+                user.name, // Naam van de gebruiker
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.green[900],
@@ -56,7 +57,7 @@ class LeaderboardItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Producten gescand: ${user['scanned_count']}', // Aantal gescande producten
+                'Producten gescand: ${user.scannedCount}', // Aantal gescande producten
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.green[700],

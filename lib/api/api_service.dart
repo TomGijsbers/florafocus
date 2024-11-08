@@ -1,4 +1,6 @@
 import 'dart:convert'; // Importeer de JSON conversie bibliotheek
+import 'package:florafocus/models/product.dart';
+import 'package:florafocus/models/user.dart';
 import 'package:http/http.dart'
     as http; // Importeer de http package voor netwerkverzoeken
 
@@ -6,7 +8,7 @@ class ApiService {
   static const String baseUrl =
       'http://docker.taile0d53a.ts.net:8084'; // De basis-URL van de API
   // Functie om gebruikers voor de leaderboard op te halen
-  Future<List<Map<String, dynamic>>> fetchUsers() async {
+  Future<List<User>> fetchUsers() async {
     try {
       final response = await http.get(Uri.parse(
           '$baseUrl/users/all')); // Haal gebruikersgegevens op van de API
@@ -14,8 +16,9 @@ class ApiService {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(
             response.body); // Converteer de JSON response naar een lijst
-        return List<Map<String, dynamic>>.from(
-            data); // Retourneer de gebruikersgegevens als een lijst van mappen
+        return data
+            .map((item) => User.fromJson(item))
+            .toList(); // Retourneer de gebruikersgegevens als een lijst van mappen
       } else {
         print(
             'Response status: ${response.statusCode}'); // Toon de response code als er iets mis gaat
@@ -31,20 +34,21 @@ class ApiService {
   }
 
   // Functie om een gebruiker te authentiseren en de gebruikersdata terug te geven
-  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+  Future<User?> loginUser(String email, String password) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/users?email=$email'));
 
       if (response.statusCode == 200) {
-        List<dynamic> users = json.decode(response.body);
-        if (users.isNotEmpty) {
-          final user = users[0];
+        Map<String, dynamic> user = json.decode(response.body);
+        if (user.isNotEmpty) {
           if (user['password'] == password) {
+            User userObj = User.fromJson(user);
             // Haal de gescande zaadjes op
             final userId = user['id'];
             final products = await fetchUserProducts(userId);
-            user['scanned_seeds'] = products;
-            return user;
+            userObj.scannedProducts =
+                products.map((product) => product.skuCode).toList();
+            return userObj;
           } else {
             print('Wachtwoord onjuist');
           }
@@ -61,14 +65,14 @@ class ApiService {
     return null;
   }
 
-  Future<List<Map<String, dynamic>>> fetchUserProducts(int userId) async {
+  Future<List<Product>> fetchUserProducts(int userId) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/users/$userId/products'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return data.map((item) => Product.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -81,13 +85,13 @@ class ApiService {
   }
 
   // Functie om producten op te halen
-  Future<List<Map<String, dynamic>>> fetchProducts() async {
+  Future<List<Product>> fetchProducts() async {
     try {
       final response = await http.get(Uri.parse("$baseUrl/products/all"));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return data.map((item) => Product.fromJson(item)).toList();
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -100,14 +104,14 @@ class ApiService {
   }
 
   // Method to fetch a single product by SKU
-  Future<List<Map<String, dynamic>>> getProductBySku(String sku) async {
+  Future<List<Product>> getProductBySku(String sku) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/products?skuCode=$sku'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data);
+        return List<Product>.from(data);
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -136,15 +140,17 @@ class ApiService {
   }
 
   // Functie om gebruikersdata op te halen op basis van ID
-  Future<Map<String, dynamic>?> fetchUserDataById(int userId) async {
+  Future<User?> fetchUserDataById(int userId) async {
     try {
       final response = await http.get(Uri.parse(
           '$baseUrl/users/$userId')); // Haal gebruikersgegevens op van de API
       if (response.statusCode == 200) {
-        Map<String, dynamic> user = json
+        Map<String, dynamic> userMap = json
             .decode(response.body); // Converteer de JSON response naar een map
+        User user =
+            User.fromJson(userMap); // Converteer de map naar een User object
         print(
-            'Fetched user: $user'); // Debug print om opgehaalde gebruiker te controleren
+            'Fetched user: ${user.name}'); // Debug print om opgehaalde gebruiker te controleren
         return user; // Retourneer de gebruikersgegevens
       } else {
         print(
@@ -159,10 +165,11 @@ class ApiService {
   }
 
 // Functie om gebruikersdata bij te werken
-  Future<bool> updateUserData(int userId, String name, String email) async {
+  Future<void> updateUserData(int userId, String name, String email) async {
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/user/$userId'), // Stuur een PUT verzoek naar de API
+        Uri.parse(
+            '$baseUrl/users/$userId'), // Stuur een PUT verzoek naar de API
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -172,11 +179,13 @@ class ApiService {
         }),
       );
 
-      return response.statusCode ==
-          200; // Retourneer true als de update succesvol was
+      if (response.statusCode == 200) {
+        print('User data updated successfully');
+      } else {
+        print('Failed to update user data: ${response.statusCode}');
+      }
     } catch (e) {
       print('Error updating user data: $e');
-      return false; // Retourneer false bij een fout
     }
   }
 }

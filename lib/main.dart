@@ -1,3 +1,4 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/login_page.dart'; // Zorg ervoor dat deze import correct is
@@ -24,30 +25,26 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         // Verwijs naar de LoginPage als de initiële route
         '/profile': (context) => ProfilePage(
-            user: ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>),
+            user: ModalRoute.of(context)!.settings.arguments as User),
         // Haal de gebruikersdata op uit de instellingen van de route
         '/leaderboard': (context) => LeaderboardPage(),
         // Verwijs naar de LeaderboardPage
         '/products': (context) => ProductsPage(),
         // Verwijs naar de ProductsPage
         '/image_target': (context) => ImageTargetPage(
-            user: ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>),
+            user: ModalRoute.of(context)!.settings.arguments as User),
         // Verwijs naar de ImageTargetPage
       },
       // Dynamisch routes genereren
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {
-          final user = settings.arguments
-              as Map<String, dynamic>; // Haal gebruikersdata op
+          final user = settings.arguments as User; // Haal gebruikersdata op
           return MaterialPageRoute(
             builder: (context) =>
                 HomePage(user: user), // Bouw de HomePage met gebruikersdata
           );
         } else if (settings.name == '/statistics') {
-          final user = settings.arguments
-              as Map<String, dynamic>; // Haal gebruikersdata op
+          final user = settings.arguments as User; // Haal gebruikersdata op
           return MaterialPageRoute(
             builder: (context) => StatisticsPage(
                 user: user), // Bouw de StatisticsPage met gebruikersdata

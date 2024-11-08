@@ -1,12 +1,11 @@
+import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
 import '../api/api_service.dart'; // Importeer de ApiService
 
 class ProfilePage extends StatefulWidget {
-  final Map<String, dynamic> user; // Gebruikersdata in de vorm van een map
+  final User user; // Gebruikersdata in de vorm van een map
 
   const ProfilePage(
       {super.key,
@@ -21,15 +20,15 @@ class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController _nameController; // Controller voor de naam
   late TextEditingController _emailController; // Controller voor het emailadres
   final ApiService apiService = ApiService(); // Instantie van ApiService
-  int _productCount = 0; // Aantal producten
+  final int _productCount = 0; // Aantal producten
 
   @override
   void initState() {
     super.initState(); // Voer de initState van de superclass uit
     // Initialiseer de controllers met de huidige waarde van de gebruikersdata
-    _nameController = TextEditingController(text: widget.user['name']);
-    _emailController = TextEditingController(text: widget.user['email']);
-    _fetchUserData(); // Haal de gebruikersdata op van de API
+    _nameController = TextEditingController(text: widget.user.name);
+    _emailController = TextEditingController(text: widget.user.email);
+    _fetchUserData(); // Roep de async functie aan
   }
 
   @override
@@ -41,59 +40,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _fetchUserData() async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://docker.taile0d53a.ts.net:8084/users/all'));
-      if (response.statusCode == 200) {
-        List<Map<String, dynamic>> users =
-            List<Map<String, dynamic>>.from(json.decode(response.body));
-        print('Fetched users: $users'); // Debug print to check fetched users
-        // Zoek de gebruiker met de overeenkomende naam
-        Map<String, dynamic>? user = users.firstWhere(
-          (user) => user['name'] == widget.user['name'],
-          orElse: () => {},
-        );
-        if (user.isNotEmpty) {
-          // Controleer of de gebruiker niet leeg is
-          setState(() {
-            _nameController.text = user['name'];
-            _emailController.text = user['email'];
-            _productCount =
-                user['productSkucodes']?.length ?? 0; // Aantal producten
-          });
-          print(
-              'User data updated: ${user['name']}, ${user['email']}, Product count: $_productCount'); // Debug print
-        } else {
-          print('User not found'); // Debug print
-        }
-      } else {
-        print('Failed to fetch users: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching user data: $e');
-    }
-  }
-
-  Future<void> _updateUserData(int userId, String name, String email) async {
-    try {
-      final response = await http.put(
-        Uri.parse('http://docker.taile0d53a.ts.net:8084/user/$userId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'name': name,
-          'email': email,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        print('User data updated successfully');
-      } else {
-        print('Failed to update user data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error updating user data: $e');
+    User? fetchedUser = await apiService.fetchUserDataById(widget.user.id);
+    if (fetchedUser != null) {
+      setState(() {
+        widget.user.name = fetchedUser.name;
+        widget.user.email = fetchedUser.email;
+        widget.user.scannedProducts = fetchedUser.scannedProducts;
+        _nameController.text = fetchedUser.name;
+        _emailController.text = fetchedUser.email;
+      });
     }
   }
 
@@ -147,21 +102,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final userId = widget.user['id'];
+                final userId = widget.user.id;
                 final name = _nameController.text;
                 final email = _emailController.text;
-                final success = await apiService.updateUserData(userId, name,
-                    email); // Werk de gebruikersdata bij met de waarden uit de tekstvelden
-                if (success) {
-                  setState(() {
-                    widget.user['name'] = name;
-                    widget.user['email'] = email;
-                  });
-                  Navigator.of(context)
-                      .pop(); // Sluit het dialoogvenster na het opslaan
-                } else {
-                  // Handle error
-                }
+                await apiService.updateUserData(userId, name, email);
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.green[700], // Kleuring van de knop
@@ -181,7 +126,8 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profiel',
             style: TextStyle(
-                fontFamily: 'Montserrat')), // Titel van de app met Montserrat
+                fontFamily: 'Montserrat',
+                color: Colors.white)), // Titel van de app met Montserrat
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
       ),
       body: SingleChildScrollView(

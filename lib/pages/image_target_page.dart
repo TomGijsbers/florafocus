@@ -1,9 +1,12 @@
+import 'package:florafocus/models/product.dart';
+import 'package:florafocus/models/user.dart';
+
 import '../api/api_service.dart'; // Import the ApiService
 import 'package:flutter/material.dart';
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
 class ImageTargetPage extends StatefulWidget {
-  final Map<String, dynamic> user; // Gebruikersdata
+  final User user; // Gebruikersdata
   const ImageTargetPage({super.key, required this.user});
 
   @override
@@ -16,7 +19,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
 
   UnityWidgetController? _unityWidgetController;
   final ApiService apiService = ApiService(); // Initialize the ApiService
-  List<Map<String, dynamic>>? _products; // State variable to hold products
+  List<Product>? _products; // State variable to hold products
   bool _isPlaying = false; // State variable to track play state
 
   @override
@@ -70,7 +73,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                                 ListTile(
                                   contentPadding: const EdgeInsets.all(15),
                                   title: Text(
-                                    product['name'],
+                                    product.name,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.bold,
@@ -79,7 +82,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    'Category: ${product['category']}\nPrice: \$${product['price']}',
+                                    'Category: ${product.category}\nPrice: \$${product.price}',
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 14,
@@ -87,7 +90,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                                     ),
                                   ),
                                   trailing: Text(
-                                    'SKU: ${product['skuCode']}',
+                                    'SKU: ${product.skuCode}',
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 12,
@@ -96,8 +99,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () =>
-                                      _togglePlay(product['skuCode']),
+                                  onPressed: () => _togglePlay(product.skuCode),
                                   child: Text(_isPlaying ? 'Stop' : 'Play'),
                                 ),
                               ],
@@ -132,7 +134,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
 
   void _addProductToUserBySku(String sku) async {
     try {
-      await apiService.addProductToUserBySku(sku, widget.user['id']);
+      await apiService.addProductToUserBySku(sku, widget.user.id);
     } catch (error) {
       print('Error adding product to user: $error');
       // Handle the error appropriately

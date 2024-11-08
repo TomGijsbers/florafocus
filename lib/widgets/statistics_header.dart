@@ -10,7 +10,7 @@ class StatisticsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     // Bouw de UI van de StatisticsHeader
     return Container(
-      padding: EdgeInsets.all(16), // Padding rondom de container
+      padding: const EdgeInsets.all(16), // Padding rondom de container
       decoration: BoxDecoration(
         color: Colors.green[50], // Achtergrondkleur van de header
         borderRadius: BorderRadius.circular(10), // Afgeronde hoeken
