@@ -29,7 +29,10 @@ class _StatisticsPageState extends State<StatisticsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistieken',
-            style: TextStyle(fontFamily: 'Roboto', color: Colors.white)),
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
         backgroundColor: Colors.green[700],
       ),
       body: Padding(

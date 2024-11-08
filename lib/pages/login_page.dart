@@ -15,33 +15,45 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final ApiService apiService = ApiService();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Controllers for new account creation
+  final GlobalKey<FormState> _createAccountFormKey = GlobalKey<FormState>();
   final TextEditingController newEmailController = TextEditingController();
   final TextEditingController newNameController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
 
-  void _login() async {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    User? user = await apiService.loginUser(email, password);
-    if (!mounted) return;
-
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(user: user)),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login mislukt. Controleer uw inloggegevens.'),
-        ),
-      );
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Voer een e-mailadres in';
+    } else if (!_isValidEmail(value)) {
+      return 'Ongeldig e-mailadres';
     }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Voer een wachtwoord in';
+    }
+    return null;
+  }
+
+  String? _validateNewPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Voer een wachtwoord in';
+    } else if (value.length < 6) {
+      return 'Wachtwoord moet minimaal 6 tekens bevatten';
+    }
+    return null;
+  }
+
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Voer een naam in';
+    }
+    return null;
   }
 
   bool _isValidEmail(String email) {
@@ -51,41 +63,60 @@ class _LoginPageState extends State<LoginPage> {
     return emailRegex.hasMatch(email);
   }
 
-  void _createAccount() async {
-    String email = newEmailController.text;
-    String name = newNameController.text;
-    String password = newPasswordController.text;
+  void _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      String email = emailController.text;
+      String password = passwordController.text;
 
-    if (!_isValidEmail(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ongeldig e-mailadres.')),
-      );
-      return;
+      User? user = await apiService.loginUser(email, password);
+      if (!mounted) return;
+
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login mislukt. Controleer uw inloggegevens.'),
+          ),
+        );
+      }
     }
+  }
 
-    var response = await http.post(
-      Uri.parse('http://docker.taile0d53a.ts.net:8084/users'), // Updated URL
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'name': name,
-        'password': password,
-      }),
-    );
+  void _createAccount() async {
+    if (_createAccountFormKey.currentState?.validate() ?? false) {
+      String email = newEmailController.text;
+      String name = newNameController.text;
+      String password = newPasswordController.text;
 
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Account succesvol aangemaakt. Log in om verder te gaan.')),
+      var response = await http.post(
+        Uri.parse('http://docker.taile0d53a.ts.net:8084/users'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'name': name,
+          'password': password,
+        }),
       );
-      Navigator.of(context).pop(); // Close the create account dialog
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account aanmaken mislukt.')),
-      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('Account succesvol aangemaakt. Log in om verder te gaan.'),
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account aanmaken mislukt.')),
+        );
+      }
     }
   }
 
@@ -96,25 +127,31 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           title: const Text('Maak een nieuw account aan'),
           content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                LoginTextField(
-                  label: "Email",
-                  controller: newEmailController,
-                ),
-                const SizedBox(height: 16),
-                LoginTextField(
-                  label: "Naam",
-                  controller: newNameController,
-                ),
-                const SizedBox(height: 16),
-                LoginTextField(
-                  label: "Wachtwoord",
-                  obscureText: true,
-                  controller: newPasswordController,
-                ),
-              ],
+            child: Form(
+              key: _createAccountFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LoginTextField(
+                    label: "Email",
+                    controller: newEmailController,
+                    validator: _validateEmail,
+                  ),
+                  const SizedBox(height: 16),
+                  LoginTextField(
+                    label: "Naam",
+                    controller: newNameController,
+                    validator: _validateName,
+                  ),
+                  const SizedBox(height: 16),
+                  LoginTextField(
+                    label: "Wachtwoord",
+                    obscureText: true,
+                    controller: newPasswordController,
+                    validator: _validateNewPassword,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -175,74 +212,66 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                const Text(
-                  "Welkom bij de FloraFocus",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                    fontFamily: 'Montserrat',
-                  ),
-                ),
-                const SizedBox(height: 40),
-                LoginTextField(
-                  label: "Email",
-                  controller: emailController,
-                ),
-                const SizedBox(height: 16),
-                LoginTextField(
-                  label: "Wachtwoord",
-                  obscureText: true,
-                  controller: passwordController,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  const Text(
+                    "Welkom bij de FloraFocus",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      fontFamily: 'Montserrat',
                     ),
                   ),
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(color: Colors.white),
+                  const SizedBox(height: 40),
+                  LoginTextField(
+                    label: "Email",
+                    controller: emailController,
+                    validator: _validateEmail,
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _showCreateAccountDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  const SizedBox(height: 16),
+                  LoginTextField(
+                    label: "Wachtwoord",
+                    obscureText: true,
+                    controller: passwordController,
+                    validator: _validatePassword,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[600],
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Roboto',
+                      ),
                     ),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
+                    child: const Text(
+                      'Inloggen',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  child: const Text(
-                    "Maak een nieuw account aan",
-                    style: TextStyle(color: Colors.white),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: _showCreateAccountDialog,
+                    child: const Text(
+                      'Geen account? Maak een nieuw account aan',
+                      style: TextStyle(color: Colors.green),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

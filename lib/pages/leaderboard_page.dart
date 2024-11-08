@@ -54,11 +54,11 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
         title: const Text(
           "Klassement", // Titel van de pagina
           style: TextStyle(
-              fontFamily: 'Roboto',
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
               color: Colors.white), // Gebruik Roboto voor de titel
         ),
         backgroundColor: Colors.green[700], // Achtergrondkleur van de appbalk
-        centerTitle: true, // Centreer de titel
       ),
       // Als er een foutboodschap is, toon die in het midden van de pagina
       body: _errorMessage.isNotEmpty
