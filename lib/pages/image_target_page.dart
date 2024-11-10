@@ -20,11 +20,14 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
   UnityWidgetController? _unityWidgetController;
   final ApiService apiService = ApiService(); // Initialize the ApiService
   List<Product>? _products; // State variable to hold products
+  List<Product>? _productsAll; // State variable to hold products
+
   bool _isPlaying = false; // State variable to track play state
 
   @override
   void initState() {
     super.initState();
+    _getAllProducts(); // Call the API to get all products
   }
 
   @override
@@ -116,15 +119,28 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
   void onUnityMessage(message) {
     print('Received message from unity: ${message.toString()}');
     _isPlaying = false; // Reset the play state
-    _fetchProducts(message); // Call the API when the condition is met
+    _getProductBySku(message); // Call the API when the condition is met
     _addProductToUserBySku(message); // Call the API when the condition is met
   }
 
-  void _fetchProducts(message) async {
+  void _getProductBySku(String message) async {
     try {
       final products = await apiService.getProductBySku(message);
       setState(() {
         _products = products; // Update the state with the fetched products
+      });
+    } catch (error) {
+      print('Error fetching products: $error');
+      // Handle the error appropriately
+    }
+  }
+
+  void _getAllProducts() async {
+    try {
+      final productsAll = await apiService.fetchProducts();
+      setState(() {
+        _productsAll =
+            productsAll; // Update the state with the fetched products
       });
     } catch (error) {
       print('Error fetching products: $error');
@@ -175,25 +191,24 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
     );
   }
 
-  void _togglePlay(message) {
+  void _togglePlay(String message) {
     setState(() {
       _isPlaying = !_isPlaying;
     });
 
-    if (_unityWidgetController != null) {
-      if (message == 'APPLE001') {
-        _unityWidgetController!.postMessage(
-          'APPLE001',
-          'OnFlutterMessageReceived',
-          _isPlaying ? 'Play' : 'Stop',
-        );
-      } else if (message == 'PEAR001') {
-        _unityWidgetController!.postMessage(
-          'PEAR001',
-          'OnFlutterMessageReceived',
-          _isPlaying ? 'Play' : 'Stop',
-        );
-      }
+    // Check if the message (SKU code) is in the list of products
+    bool productExists =
+        _productsAll?.any((product) => product.skuCode == message) ?? false;
+
+    if (productExists && _unityWidgetController != null) {
+      _unityWidgetController!.postMessage(
+        message,
+        'OnFlutterMessageReceived',
+        _isPlaying ? 'Play' : 'Stop',
+      );
+    } else {
+      print('Product with SKU $message not found in the list.');
+      print(_productsAll?[0].skuCode);
     }
   }
 }
