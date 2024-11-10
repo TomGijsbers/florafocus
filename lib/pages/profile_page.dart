@@ -160,7 +160,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10), // Ruimte onder het emailadres
                 Text(
-                  "Aantal producten: $_productCount", // Toon het aantal producten
+                  "Aantal producten: ${widget.user.scannedProducts.length}",
+                  // Toon het aantal producten
                   style: TextStyle(
                     fontSize: 18, // Tekstgrootte
                     color: Colors.green[900], // Tekstkleur
