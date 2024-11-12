@@ -195,8 +195,6 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
   }
 
   String _formatCategory(String category) {
-    // If category is an enum, it might be in the format 'CATEGORY.FRUIT'
-    // Split the string by '.' and return the last part
     return category.split('.').last;
   }
 }
