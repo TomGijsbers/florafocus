@@ -1,29 +1,23 @@
-import 'package:florafocus/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 import '../api/api_service.dart';
 import '../models/product.dart';
 import '/widgets/statistics_header.dart';
 
-class StatisticsPage extends StatefulWidget {
-  final User user;
+class StatisticsPage extends StatelessWidget {
+  StatisticsPage({super.key});
 
-  const StatisticsPage({super.key, required this.user});
+  final ApiService apiService = ApiService();
 
-  @override
-  _StatisticsPageState createState() => _StatisticsPageState();
-}
+  Future<List<Product>> _fetchAllProducts() async {
+    return await apiService.fetchProducts();
+  }
 
-class _StatisticsPageState extends State<StatisticsPage> {
-  List<String>? _productSkucodes;
-  List<Product>? _products; // State variable to hold products
-  final ApiService apiService =
-      ApiService(); // Instantieer ApiService voor API-aanroepen
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchProductSkucodes(); // Haal de SKU-codes op wanneer de pagina wordt geladen
-    _getAllProducts(); // Haal alle producten op wanneer de pagina wordt geladen
+  Future<List<String>> _fetchProductSkucodes(BuildContext context) async {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    final products = await apiService.fetchUserProducts(user.id);
+    return products.map((product) => product.skuCode).toList();
   }
 
   @override
@@ -48,41 +42,72 @@ class _StatisticsPageState extends State<StatisticsPage> {
             ),
             const SizedBox(height: 20), // Ruimte tussen de header en de lijst
             Expanded(
-              child: ListView.builder(
-                itemCount: _products?.length ?? 0, // Aantal items in de lijst
-                itemBuilder: (context, index) {
-                  var product = _products![index]; // Haal het product op
-                  bool hasProduct =
-                      _productSkucodes?.contains(product.skuCode) ?? false;
+              child: FutureBuilder<List<Product>>(
+                future: _fetchAllProducts(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No products found.'));
+                  } else {
+                    final products = snapshot.data!;
+                    return FutureBuilder<List<String>>(
+                      future: _fetchProductSkucodes(context),
+                      builder: (context, skuSnapshot) {
+                        if (skuSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (skuSnapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${skuSnapshot.error}'));
+                        } else if (!skuSnapshot.hasData ||
+                            skuSnapshot.data!.isEmpty) {
+                          return const Center(
+                              child: Text('No scanned products found.'));
+                        } else {
+                          final productSkucodes = skuSnapshot.data!;
+                          return ListView.builder(
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              var product = products[index];
+                              bool hasProduct =
+                                  productSkucodes.contains(product.skuCode);
 
-                  return Card(
-                    color: Colors.green[100],
-                    // Achtergrondkleur van de kaart
-                    elevation: 4,
-                    // Hoogte-effect voor de kaart
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(12), // Afronden van de hoeken
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    // Ruimte tussen de kaarten
-                    child: ListTile(
-                      title: Text(
-                        product.skuCode, // Toon de SKU-code in de titel
-                        style: TextStyle(
-                          color: Colors.green[800], // Tekstkleur
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                      leading: Icon(
-                        hasProduct ? Icons.check_circle : Icons.circle,
-                        // Icoon aan de linkerkant
-                        color: hasProduct
-                            ? Colors.green[700]
-                            : Colors.red[700], // Kleur van het icoon
-                      ),
-                    ),
-                  );
+                              return Card(
+                                color: Colors.green[100],
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: ListTile(
+                                  title: Text(
+                                    product.skuCode,
+                                    style: TextStyle(
+                                      color: Colors.green[800],
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                  leading: Icon(
+                                    hasProduct
+                                        ? Icons.check_circle
+                                        : Icons.circle,
+                                    color: hasProduct
+                                        ? Colors.green[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }
                 },
               ),
             ),
@@ -90,24 +115,5 @@ class _StatisticsPageState extends State<StatisticsPage> {
         ),
       ),
     );
-  }
-
-  void _fetchProductSkucodes() async {
-    final products = await apiService.fetchUserProducts(widget.user.id);
-    setState(() {
-      _productSkucodes = products.map((product) => product.skuCode).toList();
-    });
-  }
-
-  void _getAllProducts() async {
-    try {
-      final products = await apiService.fetchProducts();
-      setState(() {
-        _products = products; // Update the state with the fetched products
-      });
-    } catch (error) {
-      print('Error fetching products: $error');
-      // Handle the error appropriately
-    }
   }
 }

@@ -4,7 +4,6 @@ class User {
   String email;
   final String password;
   List<String> scannedProducts;
-  int scannedCount = 0;
 
   User(
       {required this.id,

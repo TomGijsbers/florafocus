@@ -1,42 +1,17 @@
-import 'package:florafocus/api/api_service.dart';
 import 'package:florafocus/models/user.dart';
+import 'package:florafocus/providers/user_provider.dart';
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
+import 'package:provider/provider.dart';
 import '../widgets/camera_button.dart'; // Importeer de CameraButton widget
 import '../widgets/grid_item.dart'; // Importeer de GridItem widget
 
-class HomePage extends StatefulWidget {
-  final User user; // Gebruikersdata
-
-  const HomePage(
-      {super.key,
-      required this.user}); // Constructor met verplichte gebruikersdata
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final ApiService apiService = ApiService();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
-  void _fetchUserData() async {
-    User? fetchedUser = await apiService.fetchUserDataById(widget.user.id);
-    if (fetchedUser != null) {
-      setState(() {
-        widget.user.name = fetchedUser.name;
-        widget.user.email = fetchedUser.email;
-        widget.user.scannedProducts = fetchedUser.scannedProducts;
-      });
-    }
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).user;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Welkom bij de FloraFocus",
@@ -58,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(10), // Ronde hoeken
               ),
               child: Text(
-                "Hallo ${widget.user.name}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
+                "Hallo ${user.name}! Welkom op de homepage! Gebruik de onderstaande knoppen om de verschillende functies van de app te verkennen.",
                 style: TextStyle(
                   fontSize: 18, // Tekstgrootte
                   color: Colors.green[900], // Tekstkleur
@@ -78,28 +53,28 @@ class _HomePageState extends State<HomePage> {
                     label: "Statistieken", // Label voor statistieken
                     route: '/statistics', // Route naar statistiekenpagina
                     color: Colors.green[400]!, // Kleur van het item
-                    user: widget.user, // Gebruikersdata meegeven
+                    user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
                     icon: Icons.leaderboard, // Icoon voor klassement
                     label: "Klassement", // Label voor klassement
                     route: '/leaderboard', // Route naar klassementpagina
                     color: Colors.green[600]!, // Kleur van het item
-                    user: widget.user, // Gebruikersdata meegeven
+                    user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
                     icon: Icons.shopping_bag, // Icoon voor producten
                     label: "Producten", // Label voor producten
                     route: '/products', // Route naar productpagina
                     color: Colors.green[500]!, // Kleur van het item
-                    user: widget.user, // Gebruikersdata meegeven
+                    user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
                     icon: Icons.person, // Icoon voor profiel
                     label: "Profiel", // Label voor profiel
                     route: '/profile', // Route naar profielpagina
                     color: Colors.green[700]!, // Kleur van het item
-                    user: widget.user, // Gebruikersdata meegeven
+                    user: user, // Gebruikersdata meegeven
                   ),
                 ],
               ),
@@ -109,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: CameraButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/image_target', arguments: widget.user);
+          Navigator.pushNamed(context, '/image_target', arguments: user);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation

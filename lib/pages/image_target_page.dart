@@ -1,13 +1,14 @@
 import 'package:florafocus/models/product.dart';
-import 'package:florafocus/models/user.dart';
+import 'package:provider/provider.dart';
 
 import '../api/api_service.dart'; // Import the ApiService
 import 'package:flutter/material.dart';
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
+import '../providers/user_provider.dart';
+
 class ImageTargetPage extends StatefulWidget {
-  final User user; // Gebruikersdata
-  const ImageTargetPage({super.key, required this.user});
+  const ImageTargetPage({super.key});
 
   @override
   State<ImageTargetPage> createState() => _ImageTargetScreenState();
@@ -85,7 +86,7 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    'Category: ${product.category}\nPrice: \$${product.price}',
+                                    'Category: ${_formatCategory(product.category.toString())}\nPrice: \$${product.price}',
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 14,
@@ -149,8 +150,9 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
   }
 
   void _addProductToUserBySku(String sku) async {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
     try {
-      await apiService.addProductToUserBySku(sku, widget.user.id);
+      await apiService.addProductToUserBySku(sku, user.id);
     } catch (error) {
       print('Error adding product to user: $error');
       // Handle the error appropriately
@@ -169,26 +171,6 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
   void _onUnityCreated(controller) {
     controller.resume();
     _unityWidgetController = controller;
-  }
-
-  void _showImageScannedDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Image Scanned'),
-          content: const Text('An image has been successfully scanned.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _togglePlay(String message) {
@@ -210,5 +192,9 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
       print('Product with SKU $message not found in the list.');
       print(_productsAll?[0].skuCode);
     }
+  }
+
+  String _formatCategory(String category) {
+    return category.split('.').last;
   }
 }

@@ -1,5 +1,7 @@
 import 'package:florafocus/models/user.dart';
+import 'package:florafocus/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/login_text.dart';
 import '../api/api_service.dart';
 import 'home_page.dart';
@@ -72,9 +74,11 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       if (user != null) {
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -267,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _showCreateAccountDialog,
                     child: const Text(
                       'Geen account? Maak een nieuw account aan',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],

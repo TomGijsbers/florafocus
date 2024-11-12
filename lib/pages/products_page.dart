@@ -31,6 +31,8 @@ class ProductsPage extends StatelessWidget {
             return const Center(child: Text('Geen producten gevonden'));
           } else {
             final products = snapshot.data!;
+            products.sort((a, b) => a.name
+                .compareTo(b.name)); // Sort products alphabetically by name
             return ListView.builder(
               itemCount: products.length,
               itemBuilder: (context, index) {

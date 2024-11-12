@@ -1,58 +1,22 @@
 import 'package:florafocus/models/user.dart';
+import 'package:florafocus/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '/widgets/profile_header.dart'; // Importeer de ProfileHeader widget
 import '/widgets/edit_profile.dart'; // Importeer de EditProfileButton widget
 import '../api/api_service.dart'; // Importeer de ApiService
 
-class ProfilePage extends StatefulWidget {
-  final User user; // Gebruikersdata in de vorm van een map
+class ProfilePage extends StatelessWidget {
+  ProfilePage({super.key});
 
-  const ProfilePage(
-      {super.key,
-      required this.user}); // Constructor die de gebruikersdata vereist
-
-  @override
-  State<StatefulWidget> createState() =>
-      _ProfilePageState(); // Creëer de state voor de ProfilePage
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  late TextEditingController _nameController; // Controller voor de naam
-  late TextEditingController _emailController; // Controller voor het emailadres
   final ApiService apiService = ApiService(); // Instantie van ApiService
-  final int _productCount = 0; // Aantal producten
 
-  @override
-  void initState() {
-    super.initState(); // Voer de initState van de superclass uit
-    // Initialiseer de controllers met de huidige waarde van de gebruikersdata
-    _nameController = TextEditingController(text: widget.user.name);
-    _emailController = TextEditingController(text: widget.user.email);
-    _fetchUserData(); // Roep de async functie aan
-  }
+  void _showEditProfileModal(BuildContext context, User user) {
+    final TextEditingController _nameController =
+        TextEditingController(text: user.name);
+    final TextEditingController _emailController =
+        TextEditingController(text: user.email);
 
-  @override
-  void dispose() {
-    // Ruim de controllers op wanneer de widget wordt verwijderd
-    _nameController.dispose();
-    _emailController.dispose();
-    super.dispose(); // Voer de dispose van de superclass uit
-  }
-
-  void _fetchUserData() async {
-    User? fetchedUser = await apiService.fetchUserDataById(widget.user.id);
-    if (fetchedUser != null) {
-      setState(() {
-        widget.user.name = fetchedUser.name;
-        widget.user.email = fetchedUser.email;
-        widget.user.scannedProducts = fetchedUser.scannedProducts;
-        _nameController.text = fetchedUser.name;
-        _emailController.text = fetchedUser.email;
-      });
-    }
-  }
-
-  void _showEditProfileModal(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -102,10 +66,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final userId = widget.user.id;
-                final name = _nameController.text;
-                final email = _emailController.text;
-                await apiService.updateUserData(userId, name, email);
+                user.name = _nameController.text;
+                user.email = _emailController.text;
+                Provider.of<UserProvider>(context, listen: false).setUser(user);
+                // Optionally, call an API to update the user data on the server
+                apiService.updateUserData(user.id, user.name, user.email);
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -121,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).user;
     // Bouw de gebruikersinterface van de profielpagina
     return Scaffold(
       appBar: AppBar(
@@ -140,18 +106,17 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 const SizedBox(height: 20), // Ruimte boven de header
                 ProfileHeader(
-                    userName:
-                        _nameController.text), // Toon profielheader met naam
+                    userName: user.name), // Toon profielheader met naam
                 const SizedBox(height: 20), // Ruimte onder de header
                 EditProfileButton(
                   onPressed: () {
-                    _showEditProfileModal(
-                        context); // Toon het bewerk profiel dialoogvenster
+                    _showEditProfileModal(context,
+                        user); // Toon het bewerk profiel dialoogvenster
                   },
                 ),
                 const SizedBox(height: 20), // Ruimte onder de knop
                 Text(
-                  "Email: ${_emailController.text}", // Toon het emailadres
+                  "Email: ${user.email}", // Toon het emailadres
                   style: TextStyle(
                     fontSize: 18, // Tekstgrootte
                     color: Colors.green[900], // Tekstkleur
@@ -160,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10), // Ruimte onder het emailadres
                 Text(
-                  "Aantal producten: ${widget.user.scannedProducts.length}",
+                  "Aantal producten: ${user.scannedProducts.length}",
                   // Toon het aantal producten
                   style: TextStyle(
                     fontSize: 18, // Tekstgrootte
