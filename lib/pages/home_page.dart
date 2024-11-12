@@ -6,9 +6,7 @@ import '../widgets/camera_button.dart'; // Importeer de CameraButton widget
 import '../widgets/grid_item.dart'; // Importeer de GridItem widget
 
 class HomePage extends StatelessWidget {
-  // Gebruikersdata
-
-  const HomePage({super.key}); // Constructor met verplichte gebruikersdata
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
