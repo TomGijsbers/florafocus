@@ -57,7 +57,7 @@ class LeaderboardItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Producten gescand: ${user.scannedCount}', // Aantal gescande producten
+                'Producten gescand: ${user.scannedProducts.length}', // Aantal gescande producten
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.green[700],

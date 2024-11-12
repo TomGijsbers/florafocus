@@ -8,7 +8,8 @@ class GridItem extends StatelessWidget {
   final Color color; // Kleur van het icoon
   final User user; // Add user data
 
-  GridItem({
+  const GridItem({
+    super.key,
     required this.icon,
     required this.label,
     required this.route,
