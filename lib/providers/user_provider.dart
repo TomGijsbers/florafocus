@@ -12,4 +12,9 @@ class UserProvider extends ChangeNotifier {
     _user = user;
     notifyListeners();
   }
+
+  void logout() {
+    _user = User(id: 0, name: '', email: '', password: '', scannedProducts: []);
+    notifyListeners();
+  }
 }

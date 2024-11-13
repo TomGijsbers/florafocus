@@ -3,7 +3,8 @@ import 'package:florafocus/providers/user_provider.dart';
 import 'package:flutter/material.dart'; // Importeer de Flutter-material design bibliotheek
 import 'package:provider/provider.dart';
 import '../widgets/camera_button.dart'; // Importeer de CameraButton widget
-import '../widgets/grid_item.dart'; // Importeer de GridItem widget
+import '../widgets/grid_item.dart';
+import '../widgets/logout_button.dart'; // Importeer de GridItem widget
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,6 +20,9 @@ class HomePage extends StatelessWidget {
                 fontFamily: 'Roboto', color: Colors.white)), // Titel van de app
         centerTitle: true, // Centreer de titel
         backgroundColor: Colors.green[700], // Achtergrondkleur van de AppBar
+        actions: const [
+          LogoutButton(), // Add the LogoutButton here
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0), // Padding rondom de body
@@ -49,31 +53,47 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: 16.0, // Ruimte tussen rijen
                 children: [
                   GridItem(
-                    icon: Icons.bar_chart, // Icoon voor statistieken
-                    label: "Statistieken", // Label voor statistieken
-                    route: '/statistics', // Route naar statistiekenpagina
-                    color: Colors.green[400]!, // Kleur van het item
+                    icon: Icons.bar_chart,
+                    // Icoon voor statistieken
+                    label: "Statistieken",
+                    // Label voor statistieken
+                    route: '/statistics',
+                    // Route naar statistiekenpagina
+                    color: Colors.green[400]!,
+                    // Kleur van het item
                     user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
-                    icon: Icons.leaderboard, // Icoon voor klassement
-                    label: "Klassement", // Label voor klassement
-                    route: '/leaderboard', // Route naar klassementpagina
-                    color: Colors.green[600]!, // Kleur van het item
+                    icon: Icons.leaderboard,
+                    // Icoon voor klassement
+                    label: "Klassement",
+                    // Label voor klassement
+                    route: '/leaderboard',
+                    // Route naar klassementpagina
+                    color: Colors.green[600]!,
+                    // Kleur van het item
                     user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
-                    icon: Icons.shopping_bag, // Icoon voor producten
-                    label: "Producten", // Label voor producten
-                    route: '/products', // Route naar productpagina
-                    color: Colors.green[500]!, // Kleur van het item
+                    icon: Icons.shopping_bag,
+                    // Icoon voor producten
+                    label: "Producten",
+                    // Label voor producten
+                    route: '/products',
+                    // Route naar productpagina
+                    color: Colors.green[500]!,
+                    // Kleur van het item
                     user: user, // Gebruikersdata meegeven
                   ),
                   GridItem(
-                    icon: Icons.person, // Icoon voor profiel
-                    label: "Profiel", // Label voor profiel
-                    route: '/profile', // Route naar profielpagina
-                    color: Colors.green[700]!, // Kleur van het item
+                    icon: Icons.person,
+                    // Icoon voor profiel
+                    label: "Profiel",
+                    // Label voor profiel
+                    route: '/profile',
+                    // Route naar profielpagina
+                    color: Colors.green[700]!,
+                    // Kleur van het item
                     user: user, // Gebruikersdata meegeven
                   ),
                 ],
