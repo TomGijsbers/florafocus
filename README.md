@@ -25,11 +25,19 @@ graph TD
     A --> C[Home Page]
     A --> D[Statistics Page]
     A --> E[Leaderboard Page]
+    A --> G[Products Page]
+    A --> H[Image Target Page]
+    A --> I[Profile Page]
     B --> C
     C --> D
     C --> E
+    C --> G
+    C --> H
+    C --> I
     A --> F[(Backend Server)]
+    
     style F fill:#f9f,stroke:#333,stroke-width:2px
+
 ```
 
 ## Functionaliteiten
