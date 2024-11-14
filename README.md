@@ -65,7 +65,7 @@ Geeft een overzicht van de gescande producten per gebruiker.
   - Real-time data-updates en visuele statistieken
   - **Visual Feedback**: Gebruikt icons om gescande/niet-gescande producten aan te duiden
   - **Real-time Updates**: Synchroniseert met backend via ApiService
-  - **Custom Styling**: Consistent kleurenschema met groentinten
+  
 
 ### Leaderboard Page
 
