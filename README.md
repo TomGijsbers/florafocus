@@ -64,7 +64,7 @@ Geeft een overzicht van de gescande producten per gebruiker.
   - Toont gescande producten met SKU-code
   - Real-time data-updates en visuele statistieken
   - **Visual Feedback**: Gebruikt icons om gescande/niet-gescande producten aan te duiden
-  - **Real-time Updates**: Synchroniseert met backend via ApiService
+  - **Up-to-date Productinformatie**: Synchroniseert met backend via ApiService bij openen van de pagina
   
 
 ### Leaderboard Page
@@ -85,7 +85,7 @@ Toont een ranglijst van gebruikers gebaseerd op het aantal gescande producten.
 ### Image Target Page
 
 - **Unity Integratie**: Gebruikt flutter_unity_widget voor AR scanning
-- **Product Detectie**: Ondersteunt specifieke SKU codes (bijv. APPLE001, PEAR001)
+- **Product Detectie**:  Specifieke SKU’s worden gedetecteerd en automatisch aan de gebruiker toegevoegd bij een scan
 - **Real-time Feedback**: Directe feedback bij succesvolle scans
 
 ## API Service
