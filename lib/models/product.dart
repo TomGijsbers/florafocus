@@ -5,20 +5,23 @@ class Product {
   final String skuCode;
   final double price;
   final Category category;
+  final String description;
 
   Product(
       {required this.name,
       required this.skuCode,
       required this.price,
-      required this.category});
+      required this.category,
+      required this.description});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       name: json['name'],
       skuCode: json['skuCode'],
       price: (json['price'] as num).toDouble(),
-      category: _categoryFromString(
-          json['category']), // Parse category as Category enum
+      category: _categoryFromString(json['category']),
+      // Parse category as Category enum
+      description: json['description'],
     );
   }
 

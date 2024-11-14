@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
 import '../providers/user_provider.dart';
+import '../widgets/product_details.dart';
 
 class ImageTargetPage extends StatefulWidget {
   const ImageTargetPage({super.key});
@@ -65,53 +66,14 @@ class _ImageTargetScreenState extends State<ImageTargetPage> {
                         itemCount: _products!.length,
                         itemBuilder: (context, index) {
                           final product = _products![index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 15),
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  contentPadding: const EdgeInsets.all(15),
-                                  title: Text(
-                                    product.name,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.green[900],
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    'Category: ${_formatCategory(product.category.toString())}\nPrice: \$${product.price}',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 14,
-                                      color: Colors.green[700],
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    'SKU: ${product.skuCode}',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 12,
-                                      color: Colors.green[500],
-                                    ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => _togglePlay(product.skuCode),
-                                  child: Text(_isPlaying ? 'Stop' : 'Play'),
-                                ),
-                              ],
-                            ),
+                          return ProductCard(
+                            product: product,
+                            isPlaying: _isPlaying,
+                            onPlayToggle: () => _togglePlay(product.skuCode),
                           );
                         },
                       ),
-          ),
+          )
         ],
       ),
     );
