@@ -107,6 +107,10 @@ De ApiService-klasse verzorgt alle communicatie met de backend. Enkele kernfunct
 - `updateUserData()`: Werkt gebruikersprofielgegevens bij
 - `addProductToUserBySku()`: Registreert gescande producten voor gebruikers
 - `getProductBySku()`: Haalt specifieke productdetails op
+- `addProductToUserBySku(sku, userId)`: Voegt een product, geïdentificeerd door SKU, toe aan de lijst van gescande producten voor een specifieke gebruiker.
+- `fetchUserDataById(userId)`: Haalt gebruikersgegevens op voor een specifieke gebruiker op basis van hun userId.
+
+
 
 ## Beveiliging
 
